@@ -1,0 +1,34 @@
+apply plugin: 'maven'
+apply plugin: 'java'
+
+project.ext {
+    mainClass = 'com.progwml6.'
+    currentYear = '2013'
+	}
+group = 'com.progwml6.ircbot.bot'
+version = '0.0.1'
+project.build.sourceEncoding = 'UTF-8'
+description = "FTB IRC bot"
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+jar {
+    manifest {
+        attributes 'Main-Class': project.mainClass
+    }
+}
+
+repositories {  
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile 'org.pircbotx:pircbotx:1.8'
+    compile 'com.jcraft:jsch:0.1.50'
+    compile 'org.jsoup:jsoup:1.7.2'
+    compile 'org.beanshell:bsh:2.0b4'
+    compile 'com.ning:async-http-client:1.6.3'
+    compile 'commons-collections:commons-collections:3.2.1'
+    compile 'commons-logging:commons-logging:1.1.3'
+    compile 'com.google.gwt.google-apis:gwt-ajaxloader:1.1.0'
+	compile 'com.google.code.gson:gson:2.2.4'
+    compile 'commons-configuration:commons-configuration:1.10'
+}
