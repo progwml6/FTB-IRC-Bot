@@ -1,5 +1,6 @@
 apply plugin: 'maven'
 apply plugin: 'java'
+apply plugin: 'eclipse'
 
 project.ext {
     mainClass = 'com.progwml6.'
@@ -18,8 +19,7 @@ jar {
 }
 
 repositories {  
-     maven { url "http://repo.maven.apache.org/maven2" }
-}
+    mavenCentral()}
 dependencies {
     compile 'org.pircbotx:pircbotx:1.8'
     compile 'com.jcraft:jsch:0.1.50'
