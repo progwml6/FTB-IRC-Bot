@@ -51,8 +51,8 @@ import org.pircbotx.hooks.events.PrivateMessageEvent;
  * @author zack6849(zcraig29@gmail.com)
  */
 public class Commands {
-	static Interpreter i = new Interpreter();
-	static Interpreter interpreter = new Interpreter();
+        static Interpreter i = new Interpreter();
+        static Interpreter interpreter = new Interpreter();
     static List<String> owners = Bot.owners;
     static String perms = Config.PERMISSIONS_DENIED;
     static String password;
@@ -81,9 +81,9 @@ public class Commands {
     }
     
     public static void usage(MessageEvent e) {
-    if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+    if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
         Runtime runtime = Runtime.getRuntime();
-
+        e.getUser().isVerified();
         NumberFormat format = NumberFormat.getInstance();
 
         StringBuilder sb = new StringBuilder();
@@ -103,7 +103,7 @@ public class Commands {
     }
     
     public static void cinsult(MessageEvent e) throws InterruptedException {
-        if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+        if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
         String[] args = e.getMessage().split(" ");
         String join = args[1];
         Channel chan = e.getBot().getChannel(args[1]);
@@ -137,7 +137,7 @@ public class Commands {
     }
     
     public static void insult(MessageEvent e) {
-        if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+        if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
         String insult1 = null;
         do {
         try {
@@ -199,7 +199,7 @@ public class Commands {
             String x = y.replaceAll(" ", "%20");
             String finalurl = null;
             String nope = null;
-            String no = "																				No results found.";
+            String no = "                                                                                                                                                                No results found.";
             try {
                 URL wiki;
                 wiki = new URL("http://is.gd/create.php?format=simple&url=" + x);
@@ -308,11 +308,11 @@ public class Commands {
     public static void joinChannel(MessageEvent e) {
         String[] args = e.getMessage().split(" ");
         if (args.length == 2) {
-            if (e.getBot().getChannel(args[1]).isOp(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+            if (e.getUser().isIrcop()  || Utils.isAdmin(e)) {
                 e.respond("FINE!");
                 if (args[1].startsWith("#")) {
                 e.getBot().sendIRC().joinChannel(args[1]);
-                e.getBot().getChannel(args[1]);
+                e.getChannel(args[1]);
                 } else {
                 String y = "#" + args[1];
                 e.getBot().sendIRC().joinChannel(y);
@@ -357,7 +357,7 @@ public class Commands {
     }
 
     public static void authenticate(MessageEvent e) {
-        e.getBot().identify(password);
+        bot.sendIRC().message("NickServ", "identify " + password);
     }
 
     public static void listFiles(MessageEvent e) {
@@ -440,7 +440,7 @@ public class Commands {
     }
     
     public static void clenseMC(MessageEvent e) {
-    	String[] args = e.getMessage().split(" ");
+            String[] args = e.getMessage().split(" ");
         if (args.length == 4) {
             User t = e.getBot().getUser(args[2]);
             User x = e.getBot().getUser(args[3]);
@@ -451,29 +451,29 @@ public class Commands {
     }
 
     public static void partChannel(MessageEvent e) {
-    	String[] args = e.getMessage().split(" ");
-    	  if(args.length == 1){
-    		if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+            String[] args = e.getMessage().split(" ");
+              if(args.length == 1){
+                    if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e)) {
                 e.getBot().partChannel(e.getChannel());
             } else {
                 e.respond(perms);
             }
-    	} else {
-    		Channel chan = e.getBot().getChannel(args[1]);
-    		e.getBot().partChannel(chan);
-    	} 
+            } else {
+                    Channel chan = e.getBot().getChannel(args[1]);
+                    e.getBot().partChannel(chan);
+            } 
     }
     
     public static void sendAction(MessageEvent e){
-        if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
-    	String[] args = e.getMessage().split(" ");
-    	
-    	StringBuilder sb = new StringBuilder();
-    	for(int i = 1; i < args.length; i++){
-    		sb.append(args[i]).append(" ");
-    	}
+        if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+            String[] args = e.getMessage().split(" ");
+            
+            StringBuilder sb = new StringBuilder();
+            for(int i = 1; i < args.length; i++){
+                    sb.append(args[i]).append(" ");
+            }
         
-    	String action = sb.toString().trim();
+            String action = sb.toString().trim();
         e.getBot().sendIRC().message(e.getChannel().toString(), action);
     } else {
             sendNotice(e.getUser().toString(), perms);
@@ -491,7 +491,7 @@ public class Commands {
 
     public static void changeNickName(MessageEvent e) {
         String[] arguments = e.getMessage().split(" ");
-        if (Utils.isAdmin(e.getUser().getNick())) {
+        if (Utils.isAdmin(e)) {
             if (arguments.length == 2) {
                 e.getBot().changeNick(arguments[1]);
             } else {
@@ -504,7 +504,7 @@ public class Commands {
 
     public static void setPrefix(MessageEvent e) {
         String[] args = e.getMessage().split(" ");
-        if (e.getChannel().getVoices().contains(e.getUser()) || e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+        if (e.getChannel().getVoices().contains(e.getUser()) || e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e)) {
             if (args.length == 2) {
                 Config.PUBLIC_IDENTIFIER = args[1];
                 sendNotice(e.getUser().toString(), e.getBot().getNick() + "' prefix was set to :" + Config.PUBLIC_IDENTIFIER);
@@ -517,35 +517,35 @@ public class Commands {
     }
 
     public static void listChannels(MessageEvent e) {
-    	String[] args = e.getMessage().split(" ");
-    	String s = String.valueOf(args[0].charAt(0));
-    	String channels = "";
-    	for(Channel c : e.getBot().getChannels()){
-    		if(!c.isSecret()){
-    			channels += c.getName() + " ";
-    		}
-    	}
-    	if(s.equalsIgnoreCase(Config.NOTICE_IDENTIFIER)){
-			e.getBot().sendIRC().notice(e.getUser().toString(), "Current channels: " + channels);
-		}else if(s.equalsIgnoreCase(Config.PUBLIC_IDENTIFIER)){
-			e.getBot().sendIRC().message(e.getChannel().toString(), "Current channels: " + channels);
-		}
+            String[] args = e.getMessage().split(" ");
+            String s = String.valueOf(args[0].charAt(0));
+            String channels = "";
+            for(Channel c : e.getBot().getChannels()){
+                    if(!c.isSecret()){
+                            channels += c.getName() + " ";
+                    }
+            }
+            if(s.equalsIgnoreCase(Config.NOTICE_IDENTIFIER)){
+                        e.getBot().sendIRC().notice(e.getUser().toString(), "Current channels: " + channels);
+                }else if(s.equalsIgnoreCase(Config.PUBLIC_IDENTIFIER)){
+                        e.getBot().sendIRC().message(e.getChannel().toString(), "Current channels: " + channels);
+                }
     }
 
     public static void not_here(MessageEvent e) {
         boolean x = Config.AWAY ;
         if (x) {
-        	e.getBot().sendIRC().message(e.getChannel().toString(), "Batman/Harry is not here, but your message will be logged for him to stalk later");
+                e.getBot().sendIRC().message(e.getChannel().toString(), "Batman/Harry is not here, but your message will be logged for him to stalk later");
            }else{
-            	
+                    
         }
     }
         public static void not_hereTNT(MessageEvent e) {
         boolean x = Config.AWAY_TNTUP ;
         if (x) {
-        	e.getBot().sendIRC().message(e.getChannel().toString(), "TNTUP is not here, but your message will be logged for him to stalk later");
+                e.getBot().sendIRC().message(e.getChannel().toString(), "TNTUP is not here, but your message will be logged for him to stalk later");
            }else{
-            	
+                    
         }
     }
     
@@ -632,7 +632,7 @@ public class Commands {
     }
 
     public static void say(MessageEvent e) {
-        if (Utils.isAdmin(e.getUser().getNick())) {
+        if (Utils.isAdmin(e)) {
             StringBuilder sb = new StringBuilder();
             String[] arguments = e.getMessage().split(" ");
             for (int i = 1; i < arguments.length; i++) {
@@ -670,28 +670,19 @@ public class Commands {
         }
     }
 
-    public static void killPM(PrivateMessageEvent e) {
-      if (Utils.isAdmin(e.getUser().getNick())) {
-        for (Channel ch : e.getUser().getChannels()) {
-            e.getBot().sendRaw().rawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
-        }
-      }else{
-    	  sendNotice(e.getUser().toString(), perms);
-      }
-    }
     public static void kill(MessageEvent e) {
-        if (Utils.isAdmin(e.getUser().getNick())) {
+        if (Utils.isAdmin(e)) {
         for (Channel ch : e.getUser().getChannels()) {
             e.getBot().sendRaw().rawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
         }
       }else{
-    	  sendNotice(e.getUser().toString(), perms);
+              sendNotice(e.getUser().toString(), perms);
       }
     }
 
     public static void op(MessageEvent e) {
         String[] arguments = e.getMessage().split(" ");
-        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e)) {
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
                 e.getBot().op(e.getChannel(), u);
@@ -704,7 +695,7 @@ public class Commands {
     }
 
     public static void deop(MessageEvent e) {
-        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e)) {
             String[] arguments = e.getMessage().split(" ");
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
@@ -719,7 +710,7 @@ public class Commands {
     }
 
     public static void voice(MessageEvent e) {
-        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e)) {
             String[] arguments = e.getMessage().split(" ");
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
@@ -733,7 +724,7 @@ public class Commands {
     }
 
     public static void deVoice(MessageEvent e) {
-        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e)) {
             String[] arguments = e.getMessage().split(" ");
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
@@ -748,7 +739,7 @@ public class Commands {
 
     public static void quiet(MessageEvent e) {
         String[] arguments = e.getMessage().split(" ");
-        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser())) {
+        if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser())) {
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
                 e.getChannel().send().setMode( "+1 " + u.getNick());
@@ -762,7 +753,7 @@ public class Commands {
 
     public static void unquiet(MessageEvent e) {
         String[] arguments = e.getMessage().split(" ");
-        if (e.getChannel().isOp(e.getUser()) || e.getChannel().hasVoice(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+        if (e.getChannel().isOp(e.getUser()) || e.getChannel().hasVoice(e.getUser()) || Utils.isAdmin(e)) {
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
                 e.getChannel().send().setMode( "-q " + u.getNick());
@@ -775,7 +766,7 @@ public class Commands {
     }
 
     public static void addOwner(MessageEvent e) throws ConfigurationException, IOException {
-        if (Utils.isAdmin(e.getUser().getNick())) {
+        if (Utils.isAdmin(e)) {
             String[] arguments = e.getMessage().split(" ");
             if (arguments.length == 2) {
                 if (!Utils.isAdmin(arguments[1])) {
@@ -799,7 +790,7 @@ public class Commands {
     }
 
     public static void delteOwner(MessageEvent e) throws ConfigurationException, IOException {
-        if (Utils.isAdmin(e.getUser().getNick())) {
+        if (Utils.isAdmin(e)) {
             String[] arguments = e.getMessage().split(" ");
             if (arguments.length == 2) {
                 if (!Utils.isAdmin(arguments[1])) {
@@ -826,7 +817,7 @@ public class Commands {
             String[] args = e.getMessage().split(" ");
             if (args.length <= 2) {
                 User u = e.getBot().getUser(args[1]);
-                if (e.getChannel().isOp(u) || Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser())) {
+                if (e.getChannel().isOp(u) || Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser())) {
                      e.getChannel().send().kick(u, "Get the fuck out of here " + u.getNick());
                 }
             }
@@ -849,7 +840,7 @@ public class Commands {
 
     public static void ignore(MessageEvent e) {
         String[] args = e.getMessage().split(" ");
-        if (Utils.isAdmin(e.getUser().getNick())  ||  e.getChannel().getOps().contains(e.getUser())) {
+        if (Utils.isAdmin(e)  ||  e.getChannel().getOps().contains(e.getUser())) {
             if (args.length == 2) {
                 User user = e.getBot().getUser(args[1]);
                 if (!Bot.ignored.contains(user.getHostmask())) {
@@ -867,7 +858,7 @@ public class Commands {
     }
 
     public static void unignore(MessageEvent e) {
-        if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+        if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
         String[] args = e.getMessage().split(" ");
         PropertiesConfiguration def = Config.customcmd;
         String word = args[1];
@@ -910,7 +901,7 @@ public class Commands {
 
     public static void setDebug(MessageEvent e) {
         boolean debug = Boolean.valueOf(e.getMessage().split(" ")[1]);
-        if (Utils.isAdmin(e.getUser().getNick())) {
+        if (Utils.isAdmin(e)) {
             e.getBot().setVerbose(debug);
             e.getBot().sendIRC().notice(e.getUser().toString(), "debug set to " + String.valueOf(debug));
         }
@@ -930,7 +921,7 @@ public class Commands {
 
     public static void setCommand(MessageEvent e){
         String[] args = e.getMessage().split(" ");
-        if (e.getChannel().getVoices().contains(e.getUser()) || e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+        if (e.getChannel().getVoices().contains(e.getUser()) || e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e)) {
         PropertiesConfiguration def = Config.customcmd;
         String word = args[1];
         StringBuilder sb = new StringBuilder();
@@ -962,7 +953,7 @@ public class Commands {
     }
 
     public static void deleteCommand(MessageEvent e){
-        if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+        if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
             String[] args = e.getMessage().split(" ");
             String word = args[1];
             if (args.length >= 2) {
@@ -984,7 +975,7 @@ public class Commands {
     }
 
     public static void cycle(MessageEvent e) {
-        if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+        if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
         String[] args = e.getMessage().split(" ");
         if (args.length == 1) {
             String chan = e.getChannel().getName();
@@ -1004,7 +995,7 @@ public class Commands {
     }
 
     public static void sendRaw(MessageEvent e) {
-        if (Utils.isAdmin(e.getUser().getNick())) {
+        if (Utils.isAdmin(e)) {
             StringBuilder sb = new StringBuilder();
             String[] args = e.getMessage().split(" ");
             for (int i = 1; i < args.length; i++) {
@@ -1033,57 +1024,57 @@ public class Commands {
     }
 
     public  static void spam(MessageEvent e){
-      if (Utils.isAdmin(e.getUser().getNick())) {
+      if (Utils.isAdmin(e)) {
         String[] args = e.getMessage().split(" ");
-    	  String target = args[1];
-    	  int count = Integer.parseInt(args[2]);
-    	  String msg = "";
-    	  for(int i = 3; i < args.length; i++){
-    		  msg += args[i]+" ";
-    	  }
-    	  for(int i =0; i < count; i++){
-    		  e.getBot().sendIRC().message(target, msg.trim());
-    	  }
+              String target = args[1];
+              int count = Integer.parseInt(args[2]);
+              String msg = "";
+              for(int i = 3; i < args.length; i++){
+                      msg += args[i]+" ";
+              }
+              for(int i =0; i < count; i++){
+                      e.getBot().sendIRC().message(target, msg.trim());
+              }
       } else {      
           e.respond(perms);
       }    
     }
-	public static void ping(MessageEvent e) {
-		String returns = "";
-		Long time = Long.valueOf("0");
-		try{
-		String[] args = e.getMessage().split(" ");
-		if(!(args.length == 3)){
-			e.respond("Invalid syntax!");
-			return;
-		}
-		String host = args[1];
-		int port = Integer.valueOf(args[2]);
-		
-		Long start = System.currentTimeMillis();
-		Socket s = new Socket(InetAddress.getByName(host),port);
-		s.close();
-		time = System.currentTimeMillis() - start;
-		returns = "Response time: " + time + " milliseconds";
-		}catch(Exception ex){
-			//ex.printStackTrace();
-			returns = ex.toString();
-		}
-		e.getBot().sendIRC().message(e.getChannel().toString(), returns);
-	}
+        public static void ping(MessageEvent e) {
+                String returns = "";
+                Long time = Long.valueOf("0");
+                try{
+                String[] args = e.getMessage().split(" ");
+                if(!(args.length == 3)){
+                        e.respond("Invalid syntax!");
+                        return;
+                }
+                String host = args[1];
+                int port = Integer.valueOf(args[2]);
+                
+                Long start = System.currentTimeMillis();
+                Socket s = new Socket(InetAddress.getByName(host),port);
+                s.close();
+                time = System.currentTimeMillis() - start;
+                returns = "Response time: " + time + " milliseconds";
+                }catch(Exception ex){
+                        //ex.printStackTrace();
+                        returns = ex.toString();
+                }
+                e.getBot().sendIRC().message(e.getChannel().toString(), returns);
+        }
 
-	public static void spy(MessageEvent e) {
-            if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
-		String[] args = e.getMessage().split(" ");
-		Channel spychan = e.getBot().getChannel(args[1]);
-		Channel relayto = e.getChannel();
-		if(Bot.relay.containsKey(spychan)){
-			Bot.relay.remove(spychan);
-			e.getBot().sendIRC().message(e.getChannel().toString(), "no longer spying on channel " + spychan.getName());
-			return;
-		}
-		Bot.relay.put(spychan, relayto);
-		e.getBot().sendIRC().message(e.getChannel().toString(), "now spying on channel " + spychan.getName());
+        public static void spy(MessageEvent e) {
+            if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+                String[] args = e.getMessage().split(" ");
+                Channel spychan = e.getBot().getChannel(args[1]);
+                Channel relayto = e.getChannel();
+                if(Bot.relay.containsKey(spychan)){
+                        Bot.relay.remove(spychan);
+                        e.getBot().sendIRC().message(e.getChannel().toString(), "no longer spying on channel " + spychan.getName());
+                        return;
+                }
+                Bot.relay.put(spychan, relayto);
+                e.getBot().sendIRC().message(e.getChannel().toString(), "now spying on channel " + spychan.getName());
             } else {
             sendNotice(e.getUser().toString(), perms);
         } 
@@ -1117,14 +1108,14 @@ public class Commands {
         }
     }
     public static void skin(MessageEvent e){
-		String[] args = e.getMessage().split(" ");
-		if (args.length == 2) {
-			User a = e.getBot().getUser(args[1]);
-			e.respond("https://tntup.me/player/" + a.getNick() + "/128");
-		}
-		
-	}
-	
+                String[] args = e.getMessage().split(" ");
+                if (args.length == 2) {
+                        User a = e.getBot().getUser(args[1]);
+                        e.respond("https://tntup.me/player/" + a.getNick() + "/128");
+                }
+                
+        }
+        
     public static void MCcheckAccount(MessageEvent e) {
         String[] args = e.getMessage().split(" ");
         if (args.length == 3) {
@@ -1133,9 +1124,9 @@ public class Commands {
             String z = y.replaceAll(">", "");
             Boolean b = Utils.checkAccount(args[2]);
                 if (b) {
-               	e.getBot().sendIRC().message(e.getChannel().toString(), z + ": " + args[2] + Colors.GREEN + " has " + Colors.NORMAL + "paid for minecraft");
+                       e.getBot().sendIRC().message(e.getChannel().toString(), z + ": " + args[2] + Colors.GREEN + " has " + Colors.NORMAL + "paid for minecraft");
                 } else {
-                	e.getBot().sendIRC().message(e.getChannel().toString(), z + ": " + args[2] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
+                        e.getBot().sendIRC().message(e.getChannel().toString(), z + ": " + args[2] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
                 }
         }
 
@@ -1277,7 +1268,7 @@ public class Commands {
                         String x = y.replaceAll(" ", "%20");
             String finalurl = null;
             String nope = null;
-            String no = "																	No results found.";
+            String no = "                                                                                                                                        No results found.";
             try {
                 URL wiki;
                 wiki = new URL("http://is.gd/create.php?format=simple&url=" + x);
@@ -1291,8 +1282,8 @@ public class Commands {
     }
     
     public static void checkAdmin (MessageEvent e) {
-        if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
-            if (Utils.isAdmin(e.getUser().getNick())) {
+        if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+            if (Utils.isAdmin(e)) {
             e.getBot().sendIRC().message(e.getChannel().toString(), "You are an Admin :D");
             }
             if (e.getChannel().hasVoice(e.getUser())) {
@@ -1481,7 +1472,7 @@ public class Commands {
 
     public static void add(MessageEvent e) throws ParseException {
         String[] args = e.getMessage().split(" ");
-        if (e.getChannel().getVoices().contains(e.getUser()) || e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
+        if (e.getChannel().getVoices().contains(e.getUser()) || e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e)) {
         PropertiesConfiguration def = Config.add;
         String word = args[1];
         StringBuilder sb = new StringBuilder();
@@ -1517,7 +1508,7 @@ public class Commands {
       }
     }
     public static void remove(MessageEvent e) {
-        if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
+        if (Utils.isAdmin(e) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
             String[] args = e.getMessage().split(" ");
             String date = args[1];
             String name = args[2];

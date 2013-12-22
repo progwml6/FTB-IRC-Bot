@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.progwml6.ircbot;
 
 import com.google.gson.Gson;
@@ -28,7 +32,9 @@ import org.jsoup.select.Elements;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.hooks.WaitForQueue;
+import org.pircbotx.hooks.events.PrivateMessageEvent;
 import org.pircbotx.hooks.events.WhoisEvent;
+
 
 
 
@@ -37,6 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.pircbotx.hooks.events.MessageEvent;
 
 /**
  *
@@ -54,21 +61,26 @@ public class Utils {
         Bot.bot.sendIRC().notice(user, notice);
     }
 
-    public static boolean isAdmin(String s) {
-      if(Config.ADMINS.contains(s) && Bot.bot.getUser(s).isVerified()){
-    	  return true;
+    public static boolean isAdmin(MessageEvent e) {
+       
+      if(Config.ADMINS.contains(e.getUser().getNick()) &&
+              e.getUser().isVerified()
+              ){
+              return true;
       }else{
-    	  return false;
+              return false;
       }
     }
-    
-    public static boolean isMCServer(String s) {
-      if(Config.MCSERVER.contains(s)&& Bot.bot.getUser(s).isVerified()) {
-    		return true;
-      }else{
-    	return false;
+    public static boolean isAdmin(PrivateMessageEvent e) {
+        
+        if(Config.ADMINS.contains(e.getUser().getNick()) &&
+                e.getUser().isVerified()
+                ){
+                return true;
+        }else{
+                return false;
+        }
       }
-    }
     
     public static String htmlFormat(String s) {
         System.out.println(String.valueOf(new File("c:/").exists()));
@@ -101,18 +113,18 @@ public class Utils {
         return paid;
     }
     public static String getAccount(User u){
-    	String returns = "";
-    	try {
-    	    Bot.bot.sendRaw().rawLineNow("WHOIS " + u.getNick() + " " + u.getNick());
+            String returns = "";
+            try {
+                Bot.bot.sendRaw().rawLineNow("WHOIS " + u.getNick() + " " + u.getNick());
             WaitForQueue queue = new WaitForQueue(Bot.bot);
             WhoisEvent event = queue.waitFor(WhoisEvent.class);
-    	} catch (InterruptedException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    	}
-    	return returns;
+            } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+            }
+            return returns;
     }
-    	
+            
 
     /*
      * @return a string with the status.
@@ -350,7 +362,7 @@ public class Utils {
     public static String munge(String s) {
         StringBuilder sb = new StringBuilder();
         String[] normal = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-        String[] munge = {"ÃƒÂ¤", "Ã�â€˜", "Ã„â€¹", "Ã„â€˜", "ÃƒÂ«", "Ã†â€™", "Ã„Â¡", "Ã„Â§", "ÃƒÂ­", "Ã„Âµ", "Ã„Â·", "Ã„Âº", "Ã¡Â¹ï¿½", "ÃƒÂ±", "ÃƒÂ¶", "Ã�ï¿½", "ÃŠÂ ", "Ã…â€”", "Ã…Â¡", "Ã…Â£", "ÃƒÂ¼", "v", "Ã�â€°", "Ã�â€¡", "ÃƒÂ¿", "Ã…Âº", "Ãƒâ€¦", "ÃŽâ€™", "Ãƒâ€¡", "Ã„Å½", "Ã„â€™", "Ã¡Â¸Å¾", "Ã„Â ", "Ã„Â¦", "Ãƒï¿½", "Ã„Â´", "Ã„Â¶", "Ã„Â¹", "ÃŽÅ“", "ÃŽï¿½", "Ãƒâ€“", "Ã�Â ", "Q", "Ã…â€“", "Ã…Â ", "Ã…Â¢", "Ã…Â®", "Ã¡Â¹Â¾", "Ã…Â´", "ÃŽÂ§", "Ã¡Â»Â²", "Ã…Â»"};
+        String[] munge = {"ÃƒÂ¤", "Ã�â€˜", "Ã„â€¹", "Ã„â€˜", "ÃƒÂ«", "Ã†â€™", "Ã„Â¡", "Ã„Â§", "ÃƒÂ­", "Ã„Âµ", "Ã„Â·", "Ã„Âº", "Ã¡Â¹ï¿½", "ÃƒÂ±", "ÃƒÂ¶", "Ã�ï¿½", "ÃŠÂ ", "Ã…â€”", "Ã…Â¡", "Ã…Â£", "ÃƒÂ¼", "v", "Ã�â€°", "Ã�â€¡", "ÃƒÂ¿", "Ã…Âº", "Ãƒâ€¦", "ÃŽâ€™", "Ãƒâ€¡", "Ã„Å½", "Ã„â€™", "Ã¡Â¸Å¾", "Ã„Â ", "Ã„Â¦", "Ãƒï¿½", "Ã„Â´", "Ã„Â¶", "Ã„Â¹", "ÃŽÅ“", "ÃŽï¿½", "Ãƒâ€“", "Ã�Â ", "Q", "Ã…â€“", "Ã…Â ", "Ã…Â¢", "Ã…Â®", "Ã¡Â¹Â¾", "Ã…Â´", "ÃŽÂ§", "Ã¡Â»Â²", "Ã…Â»"};
         String[] replace = s.split("");
         for (String s1 : replace) {
             for (int i = 0; i < normal.length; i++) {

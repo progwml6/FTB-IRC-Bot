@@ -1,7 +1,6 @@
 package com.progwml6.ircbot;
 
 import static com.progwml6.ircbot.Commands.perms;
-
 import java.awt.BorderLayout;
 
 import javax.swing.*;
@@ -75,11 +74,11 @@ public class Bot extends ListenerAdapter{
            // bot.setVerbose(Config.DEBUG_MODE);
             bot.startBot();
            // if(Config.IDENTIFY_WITH_NICKSERV){
-            //	 bot.identify(Config.PASSWORD);
+            //         bot.identify(Config.PASSWORD);
            // }
             allowed = Config.ADMINS;
             for (String s : Config.CHANS) {
-                bot.joinChannel(s);
+                Bot.bot.sendIRC().joinChannel(s);
                 System.out.println("Joined channel " + s);
             }
             //bot.getListenerManager().addListener(new Bot());
@@ -97,18 +96,17 @@ public class Bot extends ListenerAdapter{
                 Channel);
         System.out.println(test);
     }
+    
     @Override
     public void onPrivateMessage(PrivateMessageEvent e) {
-        if(Utils.isAdmin(e.getUser().getNick())) {
+        if(Utils.isAdmin(e)) {
             String[] args = e.getMessage().split(" ");
             String commandname = args[0];
             if (args.length == 2) {
-                
-        		User x = e.getBot().getUser(args[0]);
-        		if (commandname.equalsIgnoreCase("join")) {
-        			 String join = args[1];
+                        if (commandname.equalsIgnoreCase("join")) {
+                                 String join = args[1];
                                  e.getBot().sendIRC().joinChannel(join);
-        		} else {
+                        } else {
                             e.respond(perms);
                         }
             }
@@ -148,8 +146,8 @@ public class Bot extends ListenerAdapter{
             checkSpam(e);
         }
         if(ignored.contains(e.getUser().getHostmask())){
-    		return;
-    	}
+                    return;
+            }
         String[] words = e.getMessage().split(" ");
         for (int i = 0; i < words.length; i++) {
             if (Utils.isUrl(words[i]) && !command.contains("shorten") && !words[i].contains("youtube") && !curcmd.contains("setcmd")) {
@@ -191,10 +189,10 @@ public class Bot extends ListenerAdapter{
         
         
         if (e.getMessage().startsWith("prefix")){
-        	Config.PUBLIC_IDENTIFIER = "!";
+                Config.PUBLIC_IDENTIFIER = "!";
         }
         if (e.getMessage().startsWith("am i admin?") || e.getMessage().startsWith("am i admin") || e.getMessage().startsWith("Am i admin?") || e.getMessage().startsWith("Am i admin")){
-        	Commands.checkAdmin(e);
+                Commands.checkAdmin(e);
         }
     }
     
@@ -241,16 +239,16 @@ public class Bot extends ListenerAdapter{
             Commands.kick(e);
         }
         if (command.equalsIgnoreCase("skin")) {
-        	Commands.skin(e);
+                Commands.skin(e);
         }
         if(command.equalsIgnoreCase("spam")) {
-        	Commands.spam(e);
+                Commands.spam(e);
         }
         if (command.equalsIgnoreCase("raw")) {
             Commands.sendRaw(e);
         }
         if(command.equalsIgnoreCase("prefix")){
-        	Commands.setPrefix(e);
+                Commands.setPrefix(e);
         }
         if (command.equalsIgnoreCase("debug")) {
             Commands.setDebug(e);
@@ -262,7 +260,7 @@ public class Bot extends ListenerAdapter{
             Commands.joinChannel(e);
         }
         if(command.equalsIgnoreCase("exec")){
-        	Commands.execute(e);
+                Commands.execute(e);
         }
         if (command.equalsIgnoreCase("delay")) {
             Commands.setDelay(e);
@@ -301,7 +299,7 @@ public class Bot extends ListenerAdapter{
             Commands.checkMojangServers(e);
         }
         if(command.equalsIgnoreCase("spy")){
-        	Commands.spy(e);
+                Commands.spy(e);
         }
         if (command.equalsIgnoreCase("google")) {
             Commands.google(e);
@@ -320,7 +318,6 @@ public class Bot extends ListenerAdapter{
             try {
                 Config.reload();
             } catch (Exception e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
@@ -328,7 +325,7 @@ public class Bot extends ListenerAdapter{
             Commands.deop(e);
         }
         if(command.equalsIgnoreCase("ping")){
-        	Commands.ping(e);
+                Commands.ping(e);
         }
         if (command.equalsIgnoreCase("voice")) {
             Commands.voice(e);
@@ -421,24 +418,24 @@ public class Bot extends ListenerAdapter{
     public String CheckCommand(MessageEvent e) {
         String[] args = e.getMessage().split(" ");
         if(args.length == 0){
-        	return "invalid";
+                return "invalid";
         }
         String cmd1 = args[0].substring(1);
         return cmd1;
     }
-	public static String findUrl(MessageEvent e) throws MalformedURLException, IOException{
-		String msg = null;
-		String title = null;
-		String[] words = e.getMessage().split(" ");
-		for(int i = 0; i < words.length; i++){
-			if(Utils.isUrl(words[i])){
-				title = Utils.getWebpageTitle(words[i]);
-			}
-		}
-		msg = String.format("%s's url title: %s", e.getUser().getNick(), title);
+        public static String findUrl(MessageEvent e) throws MalformedURLException, IOException{
+                String msg = null;
+                String title = null;
+                String[] words = e.getMessage().split(" ");
+                for(int i = 0; i < words.length; i++){
+                        if(Utils.isUrl(words[i])){
+                                title = Utils.getWebpageTitle(words[i]);
+                        }
+                }
+                msg = String.format("%s's url title: %s", e.getUser().getNick(), title);
                 e.respond(msg);
-		return msg;
-	}
+                return msg;
+        }
 
     public static List<String> getAccessList() {
         return allowed;
@@ -457,10 +454,10 @@ public class Bot extends ListenerAdapter{
         }
     }
     @Override
-	public void onInvite(InviteEvent e){
-    	if(Config.ACCEPT_INVITES){
-    		e.getBot().sendIRC().joinChannel(e.getChannel());
-    	}
+        public void onInvite(InviteEvent e){
+            if(Config.ACCEPT_INVITES){
+                    e.getBot().sendIRC().joinChannel(e.getChannel());
+            }
     }
     private static void sendNotice(User user, String notice) {
        
@@ -468,42 +465,42 @@ public class Bot extends ListenerAdapter{
     }
     
     public void checkSpam(final MessageEvent e){
-    	new Thread(new Runnable(){
-    		@Override
-    		public void run(){
-    			//System.out.println("entered run");
-    			try{
-    				if(!users.contains(e.getUser().getNick())){
-    					if(violation.containsKey(e.getUser().getNick())){
-    						violation.put(e.getUser().getNick(), (Integer) violation.get(e.getUser().getNick()) + 1);
-    					}else{
-    						violation.put(e.getUser().getNick(), 0);
-    					}
-    					users.add(e.getUser().getNick());
-    					//System.out.println("Added to list.");
-    					Thread.sleep(750);
-    					//System.out.println("Removed from list.");
-    					users.remove(e.getUser().getNick());
-    				}else{
-    					if((Integer) violation.get(e.getUser().getNick()) > 3){
-    						e.getChannel().send().kick(e.getUser(), "Calm your tits bro.");
-    						violation.put(e.getUser().getNick(), 0);
-    						return;
-    					}
-    					//System.out.println("User already in list. muting");	
-    					e.getChannel().send().setMode("+q ", e.getUser().getHostmask());
-    					users.remove(e.getUser().getNick());
-    					//System.out.println("muted.");
-    					Utils.sendNotice(e.getUser().toString(), "You've been muted temporarily for spam.");
-    					Thread.sleep(1000 * 10);
-    					//System.out.println("unmuted");
-    					e.getChannel().send().setMode( "-q ", e.getUser().getHostmask());
-    				}
-    			}catch(Exception e){
-    				e.printStackTrace();
-    			}
-    		}
-    	}).start();
+            new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                            //System.out.println("entered run");
+                            try{
+                                    if(!users.contains(e.getUser().getNick())){
+                                            if(violation.containsKey(e.getUser().getNick())){
+                                                    violation.put(e.getUser().getNick(), (Integer) violation.get(e.getUser().getNick()) + 1);
+                                            }else{
+                                                    violation.put(e.getUser().getNick(), 0);
+                                            }
+                                            users.add(e.getUser().getNick());
+                                            //System.out.println("Added to list.");
+                                            Thread.sleep(750);
+                                            //System.out.println("Removed from list.");
+                                            users.remove(e.getUser().getNick());
+                                    }else{
+                                            if((Integer) violation.get(e.getUser().getNick()) > 3){
+                                                    e.getChannel().send().kick(e.getUser(), "Calm your tits bro.");
+                                                    violation.put(e.getUser().getNick(), 0);
+                                                    return;
+                                            }
+                                            //System.out.println("User already in list. muting");        
+                                            e.getChannel().send().setMode("+q ", e.getUser().getHostmask());
+                                            users.remove(e.getUser().getNick());
+                                            //System.out.println("muted.");
+                                            Utils.sendNotice(e.getUser().toString(), "You've been muted temporarily for spam.");
+                                            Thread.sleep(1000 * 10);
+                                            //System.out.println("unmuted");
+                                            e.getChannel().send().setMode( "-q ", e.getUser().getHostmask());
+                                    }
+                            }catch(Exception e){
+                                    e.printStackTrace();
+                            }
+                    }
+            }).start();
     }
 
     
