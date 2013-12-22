@@ -266,7 +266,7 @@ public class Bot extends ListenerAdapter{
             Commands.setDelay(e);
         }
         if (command.equalsIgnoreCase("reqf")) {
-            Commands.sendFile(e);
+           // Commands.sendFile(e);
         }
         if (command.equalsIgnoreCase("gsay")) {
             Commands.globalSay(e);

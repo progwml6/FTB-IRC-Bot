@@ -30,20 +30,13 @@ import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.PircBotX;
-import org.pircbotx.UserChannelDao;
 import org.pircbotx.hooks.events.MessageEvent;
-import org.pircbotx.hooks.events.WhoisEvent;
 
 import bsh.Interpreter;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
 import java.util.Set;
-
-import org.pircbotx.hooks.events.PrivateMessageEvent;
 
 
 @SuppressWarnings("rawtypes")
@@ -386,31 +379,6 @@ public class Commands {
             e.getBot().sendIRC().message(e.getChannel().toString(), "available files: " + filenames);
         } else {
             e.getBot().sendIRC().notice(e.getUser().toString(), "available files: " + filenames);
-        }
-    }
-
-    public static void sendFile(final MessageEvent e) {
-        final String[] args = e.getMessage().split(" ");
-        if (args.length == 2) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        File requested = new File(Config.CURRENT_DIR + "/dcc/" + args[1]);
-                        if (requested.exists()) {
-                            e.getBot().sendDCC().chatRequest(e.getUser(), 120000);
-                            Thread.sleep(2000);
-                            e.getBot().dccSendFile(requested, e.getUser(), 120000);
-                        } else {
-                            e.getBot().sendIRC().notice(e.getUser().toString(), "Unknown file specified, run listfiles to see all files.");
-                        }
-
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }).start();
-
         }
     }
 
@@ -903,7 +871,8 @@ public class Commands {
     public static void setDebug(MessageEvent e) {
         boolean debug = Boolean.valueOf(e.getMessage().split(" ")[1]);
         if (Utils.isAdmin(e)) {
-            e.getBot().setVerbose(debug);
+            //TODO fix the line below
+            //e.getBot().setVerbose(debug);
             e.getBot().sendIRC().notice(e.getUser().toString(), "debug set to " + String.valueOf(debug));
         }
     }
