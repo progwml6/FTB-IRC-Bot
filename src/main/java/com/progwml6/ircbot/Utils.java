@@ -29,11 +29,16 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
+import org.pircbotx.UserChannelDao;
 import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.PrivateMessageEvent;
 import org.pircbotx.hooks.events.WhoisEvent;
+
+
+
 
 
 
@@ -60,17 +65,35 @@ public class Utils {
     public static void sendNotice(String user, String notice) {
         Bot.bot.sendIRC().notice(user, notice);
     }
+    public static User getUser (String username){
+        return Bot.bot.getUserChannelDao().getUser(username);
+    }
+    public static Channel getChannel (String channelname){
+        return Bot.bot.getUserChannelDao().getChannel(channelname);
+    }
+    public static void partChannel (String channelname){
+        Bot.bot.getUserChannelDao().getChannel(channelname).send().part();
+    }
 
-    public static boolean isAdmin(MessageEvent e) {
+    public static boolean isAdmin(String username) {
        
-      if(Config.ADMINS.contains(e.getUser().getNick()) &&
-              e.getUser().isVerified()
-              ){
+      if(Config.ADMINS.contains(getUser(username).getNick()) &&
+             getUser(username).isVerified()){
               return true;
       }else{
               return false;
       }
     }
+    public static boolean isAdmin(MessageEvent e) {
+        
+        if(Config.ADMINS.contains(e.getUser().getNick()) &&
+                e.getUser().isVerified()
+                ){
+                return true;
+        }else{
+                return false;
+        }
+      }
     public static boolean isAdmin(PrivateMessageEvent e) {
         
         if(Config.ADMINS.contains(e.getUser().getNick()) &&
