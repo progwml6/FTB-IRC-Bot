@@ -35,7 +35,6 @@ import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
 import org.pircbotx.PircBotX;
-import org.pircbotx.UserSnapshot;
 import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.events.WhoisEvent;
 
@@ -315,11 +314,11 @@ public class Commands {
             if (e.getBot().getChannel(args[1]).isOp(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
                 e.respond("FINE!");
                 if (args[1].startsWith("#")) {
-                e.getBot().joinChannel(args[1]);
+                e.getBot().sendIRC().joinChannel(args[1]);
                 e.getBot().getChannel(args[1]);
                 } else {
                 String y = "#" + args[1];
-                e.getBot().joinChannel(y);
+                e.getBot().sendIRC().joinChannel(y);
                 e.getBot().getChannel(y);
             }
             } else {
@@ -419,7 +418,7 @@ public class Commands {
         String all = sb.toString().trim();
         if (args.length >= 3) {
             Channel t = e.getBot().getChannel(args[1]);
-            e.getBot().sendMessage(t, all);
+            e.getBot().sendIRC().message(t.toString(), all);
         } else {
             sendNotice(e.getUser().toString(), "Usage: " + Bot.prefix + "GSAY #CHANNEL MESSAGE");
         }
@@ -430,7 +429,7 @@ public class Commands {
         if (args.length == 3) {
             User t = e.getBot().getUser(args[1]);
             User x = e.getBot().getUser(args[2]);
-            e.getBot().sendAction(e.getChannel(), "cleanses " + t.getNick() + " with the love of " + x.getNick());
+            e.getBot().sendIRC().action(e.getChannel().toString(), "cleanses " + t.getNick() + " with the love of " + x.getNick());
         } else {
             sendNotice(e.getUser().toString(), "Usage: " + Bot.prefix + "Clense [victim] [rapist]");
         }
@@ -441,7 +440,7 @@ public class Commands {
         if (args.length == 4) {
             User t = e.getBot().getUser(args[2]);
             User x = e.getBot().getUser(args[3]);
-            e.getBot().sendAction(e.getChannel(), "Clenses " + t.getNick() + " with the love of " + x.getNick());
+            e.getBot().sendIRC().message(e.getChannel().toString(), "Clenses " + t.getNick() + " with the love of " + x.getNick());
         } else {
             sendNotice(e.getUser().toString(), "Usage: " + Bot.prefix + "Clense [victim] [rapist]");
         }
@@ -471,7 +470,7 @@ public class Commands {
     	}
         
     	String action = sb.toString().trim();
-        e.getBot().sendAction(e.getChannel(), action);
+        e.getBot().sendIRC().message(e.getChannel().toString(), action);
     } else {
             sendNotice(e.getUser().toString(), perms);
         }
@@ -670,7 +669,7 @@ public class Commands {
     public static void killPM(PrivateMessageEvent e) {
       if (Utils.isAdmin(e.getUser().getNick())) {
         for (Channel ch : e.getBot().getChannels()) {
-            e.getBot().sendRawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
+            e.getBot().sendRaw().rawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
         }
       }else{
     	  sendNotice(e.getUser().toString(), perms);
@@ -679,7 +678,7 @@ public class Commands {
     public static void kill(MessageEvent e) {
         if (Utils.isAdmin(e.getUser().getNick())) {
         for (Channel ch : e.getBot().getChannels()) {
-            e.getBot().sendRawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
+            e.getBot().sendRaw().rawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
         }
       }else{
     	  sendNotice(e.getUser().toString(), perms);
@@ -986,14 +985,14 @@ public class Commands {
         if (args.length == 1) {
             String chan = e.getChannel().getName();
             e.getBot().partChannel(e.getChannel());
-            e.getBot().joinChannel(chan);
+            e.getBot().sendIRC().joinChannel(chan);
         } else {
             String chan = args[1];
             if (!e.getBot().getChannelsNames().contains(chan)) {
                 e.getBot().sendIRC().notice(e.getUser().toString(), "I'm not in that channel!");
             }
             e.getBot().partChannel(e.getBot().getChannel(chan));
-            e.getBot().joinChannel(chan);
+            e.getBot().sendIRC().joinChannel(chan);
         }
     } else {
             sendNotice(e.getUser().toString(), perms);
@@ -1007,12 +1006,12 @@ public class Commands {
             for (int i = 1; i < args.length; i++) {
                 sb.append(args[i] + " ");
             }
-            e.getBot().sendRawLineNow(sb.toString().trim());
+            e.getBot().sendIRC().sendRawLineNow(sb.toString().trim());
         }
     }
 
     public static void login(MessageEvent e) {
-        e.getBot().identify(Config.PASSWORD);
+        e.getBot().sendIRC().identify(Config.PASSWORD);
     }
 
     public static void encrypt(MessageEvent e) {
@@ -1039,7 +1038,7 @@ public class Commands {
     		  msg += args[i]+" ";
     	  }
     	  for(int i =0; i < count; i++){
-    		  e.getBot().sendMessage(target, msg.trim());
+    		  e.getBot().sendIRC().message(target, msg.trim());
     	  }
       } else {      
           e.respond(perms);
@@ -1496,13 +1495,13 @@ public class Commands {
                 String allargs = allarg.replaceAll("", "");
                 if (!def.containsKey(word)) {
                     def.setProperty(newstring+""+e.getUser().getNick(), allargs);
-                    e.getBot().sendMessage(newstring + e.getUser().getNick(), allargs);
+                    e.getBot().sendIRC().message(newstring + e.getUser().getNick(), allargs);
                     
                 }
                 if (def.containsKey(word)) {
                     def.clearProperty(word);
                     def.setProperty(newstring+""+e.getUser().getNick(), allargs);
-                    e.getBot().sendMessage(newstring + e.getUser().getNick(), allargs);
+                    e.getBot().sendIRC().message(newstring + e.getUser().getNick(), allargs);
                     
                 }
                 def.save();
