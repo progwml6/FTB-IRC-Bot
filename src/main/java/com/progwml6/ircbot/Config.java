@@ -85,7 +85,7 @@ public class Config {
                         conf.setProperty("NOT-ADMIN", "AWW HELL NAW! You ain't gonna tell me what to do!");
                         conf.setProperty("DEBUG-MODE", true);
                         conf.setProperty("ACCEPT-INVITIATIONS", true);
-                        conf.setProperty("NOTICE", false);
+                        conf.setProperty("NOTICE", true);
                         conf.save();
                 }
                 ADMINS = new ArrayList<String>();

@@ -1104,123 +1104,124 @@ public class Commands {
         
     public static void help(MessageEvent e) {
             String[] args = e.getMessage().split(" ");
+            System.out.println("helpCommand: " + e.getMessage() + " " + e.getUser().toString());
             if (args.length == 1) {
-                e.getBot().sendIRC().notice(e.getUser().toString(), "Chans, Cinsult, CRstatus, Cycle, Debug[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Deop[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], DelCmd[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], DeVoice[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Google, Gsay, Ignore[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Insult, Join[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Mcstatus, Murder[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Nick[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Op[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "]");
-                e.getBot().sendIRC().notice(e.getUser().toString(), "Paid, Part, Query, Quiet[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Raw[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "],Request[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Reload[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Say, SetCmd[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Shorten, Skin, UnIgnore[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], UnQuiet[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], URL, Voice[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Wiki, YouTube");
-                e.getBot().sendIRC().notice(e.getUser().toString(), "------------------NOTES------------------");
-                e.getBot().sendIRC().notice(e.getUser().toString(), Colors.RED + "[Not requied as of 12/13/2013] " + Colors.NORMAL+ "A '#' is always required in the channel name!  |  " + Config.PUBLIC_IDENTIFIER + "join " + Colors.GREEN + "#batman" + Colors.NORMAL + " | Not " + Config.PUBLIC_IDENTIFIER + "join " + Colors.RED + "batman");
-                sendNotice(e.getUser().toString(), "The " + Config.PUBLIC_IDENTIFIER + "wiki command is still being worked on at the moment to support more Wikies.");
-                sendNotice(e.getUser().toString(), "Not all commands are listed here :P ");
-                sendNotice(e.getUser().toString(), "To people with Voice: Even if you aren't Admin for the bot, you do have access to few commands. Test to see which ones :3 ");
-                sendNotice(e.getUser().toString(), "To pople with OP: You have access to most of the commands for the! ");
-                e.getBot().sendIRC().notice(e.getUser().toString(), "--------------------------------------------");
+                e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Chans, Cinsult, CRstatus, Cycle, Debug[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Deop[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], DelCmd[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], DeVoice[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Google, Gsay, Ignore[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Insult, Join[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Mcstatus, Murder[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Nick[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Op[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "]");
+                e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Paid, Part, Query, Quiet[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Raw[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "],Request[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Reload[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Say, SetCmd[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Shorten, Skin, UnIgnore[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], UnQuiet[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], URL, Voice[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Wiki, YouTube");
+                e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "------------------NOTES------------------");
+                e.getBot().sendIRC().notice(e.getUser().getNick().toString(), Colors.RED + "[Not requied as of 12/13/2013] " + Colors.NORMAL+ "A '#' is always required in the channel name!  |  " + Config.PUBLIC_IDENTIFIER + "join " + Colors.GREEN + "#batman" + Colors.NORMAL + " | Not " + Config.PUBLIC_IDENTIFIER + "join " + Colors.RED + "batman");
+                sendNotice(e.getUser().getNick().toString(), "The " + Config.PUBLIC_IDENTIFIER + "wiki command is still being worked on at the moment to support more Wikies.");
+                sendNotice(e.getUser().getNick().toString(), "Not all commands are listed here :P ");
+                sendNotice(e.getUser().getNick().toString(), "To people with Voice: Even if you aren't Admin for the bot, you do have access to few commands. Test to see which ones :3 ");
+                sendNotice(e.getUser().getNick().toString(), "To pople with OP: You have access to most of the commands for the! ");
+                e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "--------------------------------------------");
             }
             if (args.length == 2) {
                 String commandname = args[1];
                 if (commandname.equalsIgnoreCase("Chans")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Lists the channels the bot is currently in.  |  " + Config.PUBLIC_IDENTIFIER + "chans" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Lists the channels the bot is currently in.  |  " + Config.PUBLIC_IDENTIFIER + "chans" );
                 }
                 if (commandname.equalsIgnoreCase("Cycle")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Cycles the specified [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "], if no channel name is specified it will cycle the channel the command was sent from.  |  " + Config.PUBLIC_IDENTIFIER + "cycle OR " + Config.PUBLIC_IDENTIFIER + "cycle [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Cycles the specified [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "], if no channel name is specified it will cycle the channel the command was sent from.  |  " + Config.PUBLIC_IDENTIFIER + "cycle OR " + Config.PUBLIC_IDENTIFIER + "cycle [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Debug")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sets the bot to debug (verbose) mode in system.out.  |  " + Config.PUBLIC_IDENTIFIER + "debug true/false" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sets the bot to debug (verbose) mode in system.out.  |  " + Config.PUBLIC_IDENTIFIER + "debug true/false" );
                 }
                 if (commandname.equalsIgnoreCase("Deop")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s operator status in the channel (Note: This DOES NOT take the op flags, just op.)  |  " + Config.PUBLIC_IDENTIFIER + "deop [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s operator status in the channel (Note: This DOES NOT take the op flags, just op.)  |  " + Config.PUBLIC_IDENTIFIER + "deop [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("DeVoice")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes voice from the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] (Note: This DOES NOT take the voice flags, just voice.)  |  " + Config.PUBLIC_IDENTIFIER + "devoice [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes voice from the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] (Note: This DOES NOT take the voice flags, just voice.)  |  " + Config.PUBLIC_IDENTIFIER + "devoice [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Google")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Googles the specified query and returns the first result.  |  " + Config.PUBLIC_IDENTIFIER + "google [" + Colors.GREEN + "search" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Googles the specified query and returns the first result.  |  " + Config.PUBLIC_IDENTIFIER + "google [" + Colors.GREEN + "search" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Gsay")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sends a message to the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] or [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]. (Note: Bot must be in the channel)  |  " + Config.PUBLIC_IDENTIFIER + "gsay [" + Colors.GREEN + "user" + Colors.NORMAL + "/" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "] [message]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sends a message to the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] or [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]. (Note: Bot must be in the channel)  |  " + Config.PUBLIC_IDENTIFIER + "gsay [" + Colors.GREEN + "user" + Colors.NORMAL + "/" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "] [message]" );
                 }
                 if (commandname.equalsIgnoreCase("Ignore")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Ignore all commands from [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s hostmask.  |  " + Config.PUBLIC_IDENTIFIER + "ignore [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Ignore all commands from [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s hostmask.  |  " + Config.PUBLIC_IDENTIFIER + "ignore [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Join")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Joins the specified [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]. Must start with '#' |  " + Config.PUBLIC_IDENTIFIER + "Join [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Joins the specified [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]. Must start with '#' |  " + Config.PUBLIC_IDENTIFIER + "Join [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Murder")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Immediately stops the bot.  |  " + Config.PUBLIC_IDENTIFIER + "Murder" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Immediately stops the bot.  |  " + Config.PUBLIC_IDENTIFIER + "Murder" );
                 }
                 if (commandname.equalsIgnoreCase("MCStatus")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Tells you the status of the minecraft internal servers (auth, login, session, etc)  |  " + Config.PUBLIC_IDENTIFIER + "mcstatus" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Tells you the status of the minecraft internal servers (auth, login, session, etc)  |  " + Config.PUBLIC_IDENTIFIER + "mcstatus" );
                 }
                 if (commandname.equalsIgnoreCase("Nick")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Changes the bot's nickname.  |  " + Config.PUBLIC_IDENTIFIER + "nick [name]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Changes the bot's nickname.  |  " + Config.PUBLIC_IDENTIFIER + "nick [name]" );
                 }
                 if (commandname.equalsIgnoreCase("Op")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Gives the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] operator status in the channel (Note: This DOES NOT give them the op flags, just op.)  |  " + Config.PUBLIC_IDENTIFIER + "op [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Gives the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] operator status in the channel (Note: This DOES NOT give them the op flags, just op.)  |  " + Config.PUBLIC_IDENTIFIER + "op [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Part")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Parts the specified channel. If no channel is given, It will part the channel the command was sent from.  |  " + Config.PUBLIC_IDENTIFIER + "part [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Parts the specified channel. If no channel is given, It will part the channel the command was sent from.  |  " + Config.PUBLIC_IDENTIFIER + "part [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Paid")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Tells you if [" + Colors.GREEN + "user" + Colors.NORMAL + "] has a paid minecraft account.  |  " + Config.PUBLIC_IDENTIFIER + "paid [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Tells you if [" + Colors.GREEN + "user" + Colors.NORMAL + "] has a paid minecraft account.  |  " + Config.PUBLIC_IDENTIFIER + "paid [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Uptime")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Show the amount of time the bot has been running for.  |  " + Config.PUBLIC_IDENTIFIER + "uptime" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Show the amount of time the bot has been running for.  |  " + Config.PUBLIC_IDENTIFIER + "uptime" );
                 }
                 if (commandname.equalsIgnoreCase("Query")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Queries the specified minecraft server and returns the player count and MOTD.  |  " + Config.PUBLIC_IDENTIFIER + "query [serverIP] OR " + Config.PUBLIC_IDENTIFIER + "query [serverIP] [port]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Queries the specified minecraft server and returns the player count and MOTD.  |  " + Config.PUBLIC_IDENTIFIER + "query [serverIP] OR " + Config.PUBLIC_IDENTIFIER + "query [serverIP] [port]" );
                 }
                 if (commandname.equalsIgnoreCase("Quiet")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Mutes the specified user by setting the +q flag on them.  |  " + Config.PUBLIC_IDENTIFIER + "quiet [user]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Mutes the specified user by setting the +q flag on them.  |  " + Config.PUBLIC_IDENTIFIER + "quiet [user]" );
                 }
                 if (commandname.equalsIgnoreCase("Raw")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "] Sends a raw line to the irc server.  |  Example: " + Config.PUBLIC_IDENTIFIER + "raw privmsg #chan :boo! --- Send a message to Channel '#chan' which says 'boo' --- '#chan' can be replaced by with user and privmsg can be replaced by variety of things" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "] Sends a raw line to the irc server.  |  Example: " + Config.PUBLIC_IDENTIFIER + "raw privmsg #chan :boo! --- Send a message to Channel '#chan' which says 'boo' --- '#chan' can be replaced by with user and privmsg can be replaced by variety of things" );
                 }
                 if (commandname.equalsIgnoreCase("Reload")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Reloads the bot's configuration.  |  " + Config.PUBLIC_IDENTIFIER + "reload" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Reloads the bot's configuration.  |  " + Config.PUBLIC_IDENTIFIER + "reload" );
                 }
                 if (commandname.equalsIgnoreCase("Say")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Sends a message to the [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "] you're in.  |  " + Config.PUBLIC_IDENTIFIER + "say [message]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Sends a message to the [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "] you're in.  |  " + Config.PUBLIC_IDENTIFIER + "say [message]" );
                 }
                 if (commandname.equalsIgnoreCase("Setcmd")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sets the custom command to the specified text. You can run said command as you would any other.  |  " + Config.PUBLIC_IDENTIFIER + "setcmd [" + Colors.BLUE + "command" + Colors.NORMAL + "] [" + Colors.GREEN + "text" + Colors.NORMAL + "] --- typing " + Config.PUBLIC_IDENTIFIER + "" + Colors.BLUE + "command" + Colors.NORMAL + " will say '" + Colors.GREEN + "text" + Colors.NORMAL + "'" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sets the custom command to the specified text. You can run said command as you would any other.  |  " + Config.PUBLIC_IDENTIFIER + "setcmd [" + Colors.BLUE + "command" + Colors.NORMAL + "] [" + Colors.GREEN + "text" + Colors.NORMAL + "] --- typing " + Config.PUBLIC_IDENTIFIER + "" + Colors.BLUE + "command" + Colors.NORMAL + " will say '" + Colors.GREEN + "text" + Colors.NORMAL + "'" );
                 }
                 if (commandname.equalsIgnoreCase("Unignore")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s hostmask from the ignore list.  |  " + Config.PUBLIC_IDENTIFIER + "unignore [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s hostmask from the ignore list.  |  " + Config.PUBLIC_IDENTIFIER + "unignore [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("UnQuiet")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Un-Mutes the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] by setting the -q flag on them.  |  " + Config.PUBLIC_IDENTIFIER + "UnQuiet [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Un-Mutes the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] by setting the -q flag on them.  |  " + Config.PUBLIC_IDENTIFIER + "UnQuiet [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Voice")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Gives the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] voice (Note: This DOES NOT give them the voice flags, just voice.)  |  " + Config.PUBLIC_IDENTIFIER + "Voice [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Gives the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] voice (Note: This DOES NOT give them the voice flags, just voice.)  |  " + Config.PUBLIC_IDENTIFIER + "Voice [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Skin")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Gets the Minecraft skin for the specified " + Colors.GREEN + "username" + Colors.NORMAL + " (Must be In-game Minecraft name).  |  " + Config.PUBLIC_IDENTIFIER + "skin [Minecraft " + Colors.GREEN + "username" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Gets the Minecraft skin for the specified " + Colors.GREEN + "username" + Colors.NORMAL + " (Must be In-game Minecraft name).  |  " + Config.PUBLIC_IDENTIFIER + "skin [Minecraft " + Colors.GREEN + "username" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Insult")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Says a random shakespearean insult.  |  " + Config.PUBLIC_IDENTIFIER + "insult" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Says a random shakespearean insult.  |  " + Config.PUBLIC_IDENTIFIER + "insult" );
                 }
                 if (commandname.equalsIgnoreCase("cinsult")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "(Channel Insult) Bot joins the specified channel and uses '" + Config.PUBLIC_IDENTIFIER + "insult' command.  |  " + Config.PUBLIC_IDENTIFIER + "cinsult [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "(Channel Insult) Bot joins the specified channel and uses '" + Config.PUBLIC_IDENTIFIER + "insult' command.  |  " + Config.PUBLIC_IDENTIFIER + "cinsult [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("DelCmd")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Delete a custom command that was created previously.  |  " + Config.PUBLIC_IDENTIFIER + "delcmd [" + Colors.GREEN + "Custom Command Name" + Colors.NORMAL + "]");
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Delete a custom command that was created previously.  |  " + Config.PUBLIC_IDENTIFIER + "delcmd [" + Colors.GREEN + "Custom Command Name" + Colors.NORMAL + "]");
                 }
                 if (commandname.equalsIgnoreCase("shorten")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Shortens the " + Colors.GREEN + "url" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "shorten [" + Colors.GREEN + "url" +Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Shortens the " + Colors.GREEN + "url" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "shorten [" + Colors.GREEN + "url" +Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("wiki")) {
-                    e.getBot().sendIRC().notice(e.getUser().toString(), "Search Feed The Beast Wiki.  |  "  + Config.PUBLIC_IDENTIFIER + "wiki [" + Colors.GREEN + "Item/Block/Mod name" +Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().getNick().toString(), "Search Feed The Beast Wiki.  |  "  + Config.PUBLIC_IDENTIFIER + "wiki [" + Colors.GREEN + "Item/Block/Mod name" +Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("youtube")) {
-                    sendNotice(e.getUser().toString(), "Search YouTube with the specified " + Colors.GREEN + "query" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "youtube [" + Colors.GREEN + "query" + Colors.NORMAL + "]");
+                    sendNotice(e.getUser().getNick().toString(), "Search YouTube with the specified " + Colors.GREEN + "query" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "youtube [" + Colors.GREEN + "query" + Colors.NORMAL + "]");
                 }
                 if (commandname.equalsIgnoreCase("request")) {
-                    sendNotice(e.getUser().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Send a request note to the bot owner.  |  " + Config.PUBLIC_IDENTIFIER + "request [" + Colors.GREEN + "Note to send" + Colors.NORMAL + "]");
+                    sendNotice(e.getUser().getNick().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Send a request note to the bot owner.  |  " + Config.PUBLIC_IDENTIFIER + "request [" + Colors.GREEN + "Note to send" + Colors.NORMAL + "]");
                 }
                 if (commandname.equalsIgnoreCase("Chstatus")){
-                    sendNotice(e.getUser().toString(), "Tells you the status of the CreeperHost servers status (England, Los Angeles, Atlanta, etc)  |  " + Config.PUBLIC_IDENTIFIER + Colors.GREEN + "CHstatus");
+                    sendNotice(e.getUser().getNick().toString(), "Tells you the status of the CreeperHost servers status (England, Los Angeles, Atlanta, etc)  |  " + Config.PUBLIC_IDENTIFIER + Colors.GREEN + "CHstatus");
                 }
                 if (commandname.equalsIgnoreCase("url")) {
-                    sendNotice(e.getUser().toString(), "Gets the title for a " + Colors.GREEN + "Webpage URL" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "url [" + Colors.GREEN + "webpage URL" + Colors.NORMAL + "]");
+                    sendNotice(e.getUser().getNick().toString(), "Gets the title for a " + Colors.GREEN + "Webpage URL" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "url [" + Colors.GREEN + "webpage URL" + Colors.NORMAL + "]");
                 }
             }
                 
