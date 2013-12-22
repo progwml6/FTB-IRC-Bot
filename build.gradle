@@ -1,12 +1,28 @@
 apply plugin: 'maven'
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'shadow'
+
+buildscript {
+    repositories {
+		maven {
+            name 'Shadow'
+            url 'http://dl.bintray.com/content/johnrengelman/gradle-plugins'
+        }
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'org.gradle.plugins:shadow:0.7.4'
+    }
+
+}
 
 project.ext {
-    mainClass = 'com.progwml6.'
+    mainClass = 'com.progwml6.ircbot.Bot'
     currentYear = '2013'
 	}
-group = 'com.progwml6.ircbot.bot'
+group = 'com.progwml6.ircbot'
 version = '0.0.1'
 project.build.sourceEncoding = 'UTF-8'
 description = "FTB IRC bot"
@@ -17,7 +33,10 @@ jar {
         attributes 'Main-Class': project.mainClass
     }
 }
-
+shadow {
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+}
 repositories {  
     mavenCentral()}
 dependencies {
@@ -31,5 +50,6 @@ dependencies {
     compile 'com.google.gwt.google-apis:gwt-ajaxloader:1.1.0'
 	compile 'com.google.code.gson:gson:2.2.4'
 	compile 'com.google.collections:google-collections:1.0'
+	compile 'com.google.guava:guava:15.0'
     compile 'commons-configuration:commons-configuration:1.10'
 }

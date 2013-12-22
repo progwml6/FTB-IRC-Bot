@@ -1,29 +1,20 @@
 package com.progwml6.ircbot;
 
 import static com.progwml6.ircbot.Commands.perms;
-import java.awt.BorderLayout;
 
-import javax.swing.*;
-
-import java.awt.*;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.pircbotx.Channel;
-import org.pircbotx.Colors;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -66,7 +57,7 @@ public class Bot extends ListenerAdapter{
             .addAutoJoinChannel("#batbot") //Join the official #pircbotx channel
             .buildConfiguration();
 
-            bot = new PircBotX(null);
+            bot = new PircBotX(configuration);
 
             System.out.println(String.format("=======\nSETTINGS\n=======\nBOT-NICKNAME: %s\nBOT-IDENT: %s\nIDENTIFY-WITH-NICKSERV: %s\nVERIFY ADMIN NICKNAMES: %s\nAWAY: %s\nNOTICE: %s\nNOTICE IDENTIFIER: %s\nPUBLIC_IDENTIFIER: %s\n=======\nSETTINGS\n=======\n\n\n", Config.NICK, Config.IDENT, Config.IDENTIFY_WITH_NICKSERV, Config.VERIFY_ADMIN_NICKS,Config.AWAY, Config.NOTICE, Config.NOTICE_IDENTIFIER, Config.PUBLIC_IDENTIFIER));
            // bot.setVersion("Batbot V1.8 [Original by zack6849]");
