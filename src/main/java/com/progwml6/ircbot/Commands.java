@@ -494,7 +494,7 @@ public class Commands {
         String[] arguments = e.getMessage().split(" ");
         if (Utils.isAdmin(e)) {
             if (arguments.length == 2) {
-                e.getBot().changeNick(arguments[1]);
+                e.getBot().sendIRC().changeNick(arguments[1]);
             } else {
                 e.respond("Usage: nick <new nickname>");
             }
