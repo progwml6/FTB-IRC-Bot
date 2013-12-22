@@ -50,8 +50,8 @@ public class Utils {
      * @param user the user object to send the notice too
      * @param notice the string to notice the user with
      */
-    public static void sendNotice(User user, String notice) {
-        Bot.bot.sendNotice(user, notice);
+    public static void sendNotice(String user, String notice) {
+        Bot.bot.sendIRC().notice(user, notice);
     }
 
     public static boolean isAdmin(String s) {
@@ -218,8 +218,8 @@ public class Utils {
             String all = sb.toString().trim();
             System.out.println(all);
             String[] args1 = all.split("\u0000");
-            if (args1[3].contains("Â§")) {
-                returns = "MOTD: " + args1[3].replaceAll("Â§[a-m]", "").replaceAll("Â§[1234567890]", "") + "   players: [" + args1[4] + "/" + args1[5] + "]";
+            if (args1[3].contains("Ã‚Â§")) {
+                returns = "MOTD: " + args1[3].replaceAll("Ã‚Â§[a-m]", "").replaceAll("Ã‚Â§[1234567890]", "") + "   players: [" + args1[4] + "/" + args1[5] + "]";
             } else {
                 returns = "MOTD: " + args1[3] + "   players: [" + args1[4] + "/" + args1[5] + "]";
             }
@@ -353,7 +353,7 @@ public class Utils {
     public static String munge(String s) {
         StringBuilder sb = new StringBuilder();
         String[] normal = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
-        String[] munge = {"Ã¤", "Ð‘", "Ä‹", "Ä‘", "Ã«", "Æ’", "Ä¡", "Ä§", "Ã­", "Äµ", "Ä·", "Äº", "á¹�", "Ã±", "Ã¶", "Ï�", "Ê ", "Å—", "Å¡", "Å£", "Ã¼", "v", "Ï‰", "Ï‡", "Ã¿", "Åº", "Ã…", "Î’", "Ã‡", "ÄŽ", "Ä’", "á¸ž", "Ä ", "Ä¦", "Ã�", "Ä´", "Ä¶", "Ä¹", "Îœ", "Î�", "Ã–", "Ð ", "Q", "Å–", "Å ", "Å¢", "Å®", "á¹¾", "Å´", "Î§", "á»²", "Å»"};
+        String[] munge = {"ÃƒÂ¤", "Ã�â€˜", "Ã„â€¹", "Ã„â€˜", "ÃƒÂ«", "Ã†â€™", "Ã„Â¡", "Ã„Â§", "ÃƒÂ­", "Ã„Âµ", "Ã„Â·", "Ã„Âº", "Ã¡Â¹ï¿½", "ÃƒÂ±", "ÃƒÂ¶", "Ã�ï¿½", "ÃŠÂ ", "Ã…â€”", "Ã…Â¡", "Ã…Â£", "ÃƒÂ¼", "v", "Ã�â€°", "Ã�â€¡", "ÃƒÂ¿", "Ã…Âº", "Ãƒâ€¦", "ÃŽâ€™", "Ãƒâ€¡", "Ã„Å½", "Ã„â€™", "Ã¡Â¸Å¾", "Ã„Â ", "Ã„Â¦", "Ãƒï¿½", "Ã„Â´", "Ã„Â¶", "Ã„Â¹", "ÃŽÅ“", "ÃŽï¿½", "Ãƒâ€“", "Ã�Â ", "Q", "Ã…â€“", "Ã…Â ", "Ã…Â¢", "Ã…Â®", "Ã¡Â¹Â¾", "Ã…Â´", "ÃŽÂ§", "Ã¡Â»Â²", "Ã…Â»"};
         String[] replace = s.split("");
         for (String s1 : replace) {
             for (int i = 0; i < normal.length; i++) {

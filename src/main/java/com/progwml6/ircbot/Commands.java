@@ -69,7 +69,7 @@ public class Commands {
         if (args.length == 2) {
             e.respond(Utils.shortenUrl(args[1]));
         } else {
-            Utils.sendNotice(e.getUser(), "Improper usage! correct usage: $shorten http://google.com/");
+            Utils.sendNotice(e.getUser().toString(), "Improper usage! correct usage: $shorten http://google.com/");
         }
     }
     
@@ -81,7 +81,7 @@ public class Commands {
         int hours = (int) (time / (1000 * 60 * 60)) % 24;
         int days = (int) (time / 86400000);
         String uptime = String.format("%d Days %d Hours %d Minutes and %d seconds", days, hours, minutes, seconds);
-        e.getBot().sendMessage(e.getChannel(), "I've been running for " + uptime);
+        e.getBot().sendIRC().message(e.getChannel().toString(), "I've been running for " + uptime);
     }
     
     public static void usage(MessageEvent e) {
@@ -100,9 +100,9 @@ public class Commands {
         String Max = ("Max memory: " + format.format((maxMemory / 1024) / 1024));
         String Total = ("Total free memory: " + format.format(((freeMemory + (maxMemory - allocatedMemory)) / 1024) / 1024  ));
         System.out.println(sb);
-        e.getBot().sendMessage(e.getChannel(), Free + "MB | " + Allocated + "MB | " + Max + "MB | " + Total + "MB");
+        e.getBot().sendIRC().message(e.getChannel().toString(), Free + "MB | " + Allocated + "MB | " + Max + "MB | " + Total + "MB");
     } else {
-        sendNotice(e.getUser(), perms);
+        sendNotice(e.getUser().toString(), perms);
     }
     }
     
@@ -110,7 +110,7 @@ public class Commands {
         if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
         String[] args = e.getMessage().split(" ");
         String join = args[1];
-        Channel chan = e.getBot().getChannel(args[1]);
+        Channel chan = e.getBot()..getChannel(args[1]);
         String insult1 = null;
         do {
         try {
@@ -131,12 +131,12 @@ public class Commands {
                 e1.printStackTrace();
             }
         } while (insult1.isEmpty());
-        e.getBot().joinChannel(join);
-        e.getBot().sendMessage(join, insult1);
+        e.getBot().sendIRC().joinChannel(join);
+        e.getBot().sendIRC().message(join, insult1);
         Thread.sleep(50);
         e.getBot().partChannel(chan);
     } else {
-            sendNotice(e.getUser(), perms);
+            sendNotice(e.getUser().toString(), perms);
         }
     }
     
@@ -162,9 +162,9 @@ public class Commands {
                 e1.printStackTrace();
             }
         } while (insult1.isEmpty());
-        e.getBot().sendMessage(e.getChannel(), insult1);
+        e.getBot().sendIRC().message(e.getChannel().toString(), insult1);
     } else {
-            sendNotice(e.getUser(), perms);
+            sendNotice(e.getUser().toString(), perms);
         }
     }
     
@@ -172,7 +172,7 @@ public class Commands {
         boolean Notice = Boolean.valueOf(e.getMessage().split(" ")[1]);
         if (e.getUser().getNick().equalsIgnoreCase("batman")) {
             Config.NOTICE = Notice;
-            e.getBot().sendNotice(e.getUser(), "Notice was set to " + String.valueOf(Notice));
+            e.getBot().sendIRC().notice(e.getUser().toString(), "Notice was set to " + String.valueOf(Notice));
     }
     }
     
@@ -183,7 +183,7 @@ public class Commands {
     long minute = TimeUnit.SECONDS.toMinutes(unixTime) - (TimeUnit.SECONDS.toHours(unixTime) * 60);
     long seconds = TimeUnit.SECONDS.toSeconds(unixTime) - (TimeUnit.SECONDS.toMinutes(unixTime) * 60);
                 String time = String.format("%d Days %d Hours %d Minutes and %d seconds", day, hours, minute, seconds);
-                e.getBot().sendMessage(e.getChannel(), Colors.GREEN + "System uptime" + Colors.NORMAL + ": " + time);
+                e.getBot().sendIRC().message(e.getChannel().toString(), Colors.GREEN + "System uptime" + Colors.NORMAL + ": " + time);
 }
     
     public static void wiki(MessageEvent e) {
@@ -220,7 +220,7 @@ public class Commands {
                 String line = xx.readLine();
                 String line2 = line.replaceAll("<p><i>", "").replaceAll("</i></p>", "");
                 nope = line2;
-//                e.getBot().sendMessage(e.getChannel(), nope);
+//                e.getBot().sendIRC().message(e.getChannel().toString(), nope);
                 while (line != null) {
                     System.out.println(line);
                     line = xx.readLine();
@@ -233,9 +233,9 @@ public class Commands {
                 e2.printStackTrace();
             }
             if (nope.equals(no)) {
-                e.getBot().sendMessage(e.getChannel(), "No results found. :(");
+                e.getBot().sendIRC().message(e.getChannel().toString(), "No results found. :(");
             } else {
-                e.getBot().sendMessage(e.getChannel(), message + ": " + finalurl);
+                e.getBot().sendIRC().message(e.getChannel().toString(), message + ": " + finalurl);
             }
         }
         
@@ -267,8 +267,8 @@ public class Commands {
         }   catch (Exception e2) {
                 e2.printStackTrace();
             }
-            e.getBot().sendMessage(e.getChannel(), x);
- //           e.getBot().sendMessage(e.getChannel(), message + ": " + finalurl);
+            e.getBot().sendIRC().message(e.getChannel().toString(), x);
+ //           e.getBot().sendIRC().message(e.getChannel().toString(), message + ": " + finalurl);
         }
     }
     
@@ -281,10 +281,10 @@ public class Commands {
                 result += args[i] + " ";
             }
             if (prefix.equalsIgnoreCase(Config.NOTICE_IDENTIFIER)) {
-                event.getBot().sendNotice(event.getUser(), StringEscapeUtils.unescapeHtml(Utils.google(result.trim()).replaceAll("%3F", "?").replaceAll("%3D", "=")));
+                event.getBot().sendIRC().notice(event.getUser().toString(), StringEscapeUtils.unescapeHtml(Utils.google(result.trim()).replaceAll("%3F", "?").replaceAll("%3D", "=")));
                 return;
             }
-            event.getBot().sendMessage(event.getChannel(), StringEscapeUtils.unescapeHtml(Utils.google(result.trim()).replaceAll("%3F", "?").replaceAll("%3D", "=")));
+            event.getBot().sendIRC().message(event.getChannel().toString(), StringEscapeUtils.unescapeHtml(Utils.google(result.trim()).replaceAll("%3F", "?").replaceAll("%3D", "=")));
         }
     }
 
@@ -305,7 +305,7 @@ public class Commands {
                 myList.add(u.getNick());
             }
             String f1 = myList.toString().replaceAll("[\\['']|['\\]'']", "");
-            sendNotice(e.getUser(), "The current channel operators are " + f1);
+            sendNotice(e.getUser().toString(), "The current channel operators are " + f1);
         }
     }
 
@@ -346,9 +346,9 @@ public class Commands {
         if (args.length == 2) {
             if (StringUtils.isNumeric(args[1])) {
                 e.getBot().setMessageDelay(Integer.valueOf(args[1]));
-                sendNotice(e.getUser(), "Message delay set to " + Integer.valueOf(args[1]) + " milliseconds!");
+                sendNotice(e.getUser().toString(), "Message delay set to " + Integer.valueOf(args[1]) + " milliseconds!");
             } else {
-                sendNotice(e.getUser(), "The argument " + args[1] + " is not a number!");
+                sendNotice(e.getUser().toString(), "The argument " + args[1] + " is not a number!");
             }
         }
     }
@@ -369,9 +369,9 @@ public class Commands {
         File[] dir = f.listFiles();
         if (dir.length == 0) {
             if (ispublic) {
-                e.getBot().sendMessage(e.getChannel(), "no files in that directory!");
+                e.getBot().sendIRC().message(e.getChannel().toString(), "no files in that directory!");
             } else {
-                e.getBot().sendNotice(e.getUser(), "no files in that directory.");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "no files in that directory.");
             }
             return;
         }
@@ -379,9 +379,9 @@ public class Commands {
             filenames += dir[i].getName() + " ";
         }
         if (ispublic) {
-            e.getBot().sendMessage(e.getChannel(), "available files: " + filenames);
+            e.getBot().sendIRC().message(e.getChannel().toString(), "available files: " + filenames);
         } else {
-            e.getBot().sendNotice(e.getUser(), "available files: " + filenames);
+            e.getBot().sendIRC().notice(e.getUser().toString(), "available files: " + filenames);
         }
     }
 
@@ -398,7 +398,7 @@ public class Commands {
                             Thread.sleep(2000);
                             e.getBot().dccSendFile(requested, e.getUser(), 120000);
                         } else {
-                            e.getBot().sendNotice(e.getUser(), "Unknown file specified, run listfiles to see all files.");
+                            e.getBot().sendIRC().notice(e.getUser().toString(), "Unknown file specified, run listfiles to see all files.");
                         }
 
                     } catch (Exception e1) {
@@ -421,7 +421,7 @@ public class Commands {
             Channel t = e.getBot().getChannel(args[1]);
             e.getBot().sendMessage(t, all);
         } else {
-            sendNotice(e.getUser(), "Usage: " + Bot.prefix + "GSAY #CHANNEL MESSAGE");
+            sendNotice(e.getUser().toString(), "Usage: " + Bot.prefix + "GSAY #CHANNEL MESSAGE");
         }
     }
 
@@ -432,7 +432,7 @@ public class Commands {
             User x = e.getBot().getUser(args[2]);
             e.getBot().sendAction(e.getChannel(), "cleanses " + t.getNick() + " with the love of " + x.getNick());
         } else {
-            sendNotice(e.getUser(), "Usage: " + Bot.prefix + "Clense [victim] [rapist]");
+            sendNotice(e.getUser().toString(), "Usage: " + Bot.prefix + "Clense [victim] [rapist]");
         }
     }
     
@@ -443,7 +443,7 @@ public class Commands {
             User x = e.getBot().getUser(args[3]);
             e.getBot().sendAction(e.getChannel(), "Clenses " + t.getNick() + " with the love of " + x.getNick());
         } else {
-            sendNotice(e.getUser(), "Usage: " + Bot.prefix + "Clense [victim] [rapist]");
+            sendNotice(e.getUser().toString(), "Usage: " + Bot.prefix + "Clense [victim] [rapist]");
         }
     }
 
@@ -473,16 +473,16 @@ public class Commands {
     	String action = sb.toString().trim();
         e.getBot().sendAction(e.getChannel(), action);
     } else {
-            sendNotice(e.getUser(), perms);
+            sendNotice(e.getUser().toString(), perms);
         }
     }
 
     public static void nope(MessageEvent e) {
         if (e.getMessage().contains("@")) {
             String[] arg1 = e.getMessage().split("@");
-            e.getBot().sendMessage(e.getChannel(), arg1[1] + ": http://www.youtube.com/watch?v=gvdf5n-zI14");
+            e.getBot().sendIRC().message(e.getChannel().toString(), arg1[1] + ": http://www.youtube.com/watch?v=gvdf5n-zI14");
         } else {
-            e.getBot().sendMessage(e.getChannel(), "nope: http://www.youtube.com/watch?v=gvdf5n-zI14");
+            e.getBot().sendIRC().message(e.getChannel().toString(), "nope: http://www.youtube.com/watch?v=gvdf5n-zI14");
         }
     }
 
@@ -504,9 +504,9 @@ public class Commands {
         if (e.getChannel().getVoices().contains(e.getUser()) || e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
             if (args.length == 2) {
                 Config.PUBLIC_IDENTIFIER = args[1];
-                sendNotice(e.getUser(), e.getBot().getNick() + "' prefix was set to :" + Config.PUBLIC_IDENTIFIER);
+                sendNotice(e.getUser().toString(), e.getBot().getNick() + "' prefix was set to :" + Config.PUBLIC_IDENTIFIER);
             } else {
-                sendNotice(e.getUser(), "Usage: $Bot prefix <new Bot prefix>");
+                sendNotice(e.getUser().toString(), "Usage: $Bot prefix <new Bot prefix>");
             }
         } else {
             e.respond(perms);
@@ -523,16 +523,16 @@ public class Commands {
     		}
     	}
     	if(s.equalsIgnoreCase(Config.NOTICE_IDENTIFIER)){
-			e.getBot().sendNotice(e.getUser(), "Current channels: " + channels);
+			e.getBot().sendIRC().notice(e.getUser().toString(), "Current channels: " + channels);
 		}else if(s.equalsIgnoreCase(Config.PUBLIC_IDENTIFIER)){
-			e.getBot().sendMessage(e.getChannel(), "Current channels: " + channels);
+			e.getBot().sendIRC().message(e.getChannel().toString(), "Current channels: " + channels);
 		}
     }
 
     public static void not_here(MessageEvent e) {
         boolean x = Config.AWAY ;
         if (x) {
-        	e.getBot().sendMessage(e.getChannel(), "Batman/Harry is not here, but your message will be logged for him to stalk later");
+        	e.getBot().sendIRC().message(e.getChannel().toString(), "Batman/Harry is not here, but your message will be logged for him to stalk later");
            }else{
             	
         }
@@ -540,7 +540,7 @@ public class Commands {
         public static void not_hereTNT(MessageEvent e) {
         boolean x = Config.AWAY_TNTUP ;
         if (x) {
-        	e.getBot().sendMessage(e.getChannel(), "TNTUP is not here, but your message will be logged for him to stalk later");
+        	e.getBot().sendIRC().message(e.getChannel().toString(), "TNTUP is not here, but your message will be logged for him to stalk later");
            }else{
             	
         }
@@ -560,13 +560,13 @@ public class Commands {
             }
             if (s.equalsIgnoreCase(Config.NOTICE_IDENTIFIER)) {
                 if (b) {
-                    Utils.sendNotice(e.getUser(), args[1] + ":" + Colors.GREEN + String.valueOf(b));
+                    Utils.sendNotice(e.getUser().toString(), args[1] + ":" + Colors.GREEN + String.valueOf(b));
                 } else {
-                    Utils.sendNotice(e.getUser(), args[1] + ":" + Colors.RED + String.valueOf(b));
+                    Utils.sendNotice(e.getUser().toString(), args[1] + ":" + Colors.RED + String.valueOf(b));
                 }
             }
         } else {
-            Utils.sendNotice(e.getUser(), "You failed to specify a username! usage:  " + Bot.prefix + "paid <username>");
+            Utils.sendNotice(e.getUser().toString(), "You failed to specify a username! usage:  " + Bot.prefix + "paid <username>");
         }
 
     }
@@ -574,9 +574,9 @@ public class Commands {
         String[] args = e.getMessage().split(" ");
         Boolean b = Utils.checkAccount(args[2]);
                         if (b) {
-                    e.getBot().sendMessage(e.getChannel(), args[1] + Colors.GREEN + " has " + Colors.NORMAL + "paid for minecraft");
+                    e.getBot().sendIRC().message(e.getChannel().toString(), args[1] + Colors.GREEN + " has " + Colors.NORMAL + "paid for minecraft");
                 } else {
-                    e.getBot().sendMessage(e.getChannel(), args[1] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
+                    e.getBot().sendIRC().message(e.getChannel().toString(), args[1] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
                 }
     }
 
@@ -619,10 +619,10 @@ public class Commands {
                 }
             } catch (IOException E) {
                 if (E.getMessage().contains("503")) {
-                    e.getBot().sendNotice(e.getUser(), "The Minecraft status server is temporarily unavailable, please try again later");
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "The Minecraft status server is temporarily unavailable, please try again later");
                 }
                 if (E.getMessage().contains("404")) {
-                    e.getBot().sendNotice(e.getUser(), "Uhoh, it would appear as if the haspaid page has been removed or relocated >_>");
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Uhoh, it would appear as if the haspaid page has been removed or relocated >_>");
                 }
             }
         }
@@ -636,7 +636,7 @@ public class Commands {
                 sb.append(arguments[i]).append(" ");
             }
             String allArgs = sb.toString().trim();
-            e.getBot().sendMessage(e.getChannel(), allArgs);
+            e.getBot().sendIRC().message(e.getChannel().toString(), allArgs);
         } else {
             e.respond(perms);
         }
@@ -660,10 +660,10 @@ public class Commands {
             }
         }
         if (s1.equalsIgnoreCase(Config.PUBLIC_IDENTIFIER)) {
-            Utils.sendNotice(e.getUser(), result);
+            Utils.sendNotice(e.getUser().toString(), result);
         }
         if (s1.equalsIgnoreCase(Config.NOTICE_IDENTIFIER)) {
-            e.getBot().sendMessage(e.getChannel(), result);
+            e.getBot().sendIRC().message(e.getChannel().toString(), result);
         }
     }
 
@@ -673,7 +673,7 @@ public class Commands {
             e.getBot().sendRawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
         }
       }else{
-    	  sendNotice(e.getUser(), perms);
+    	  sendNotice(e.getUser().toString(), perms);
       }
     }
     public static void kill(MessageEvent e) {
@@ -682,7 +682,7 @@ public class Commands {
             e.getBot().sendRawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
         }
       }else{
-    	  sendNotice(e.getUser(), perms);
+    	  sendNotice(e.getUser().toString(), perms);
       }
     }
 
@@ -705,7 +705,7 @@ public class Commands {
             String[] arguments = e.getMessage().split(" ");
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
-                e.getBot().sendMessage(e.getChannel(), "Sorry " + u.getNick() + " </3");
+                e.getBot().sendIRC().message(e.getChannel().toString(), "Sorry " + u.getNick() + " </3");
                 e.getBot().deOp(e.getChannel(), u);
             } else {
                 e.respond("Usage: deop <username>");
@@ -750,10 +750,10 @@ public class Commands {
                 User u = e.getBot().getUser(arguments[1]);
                 e.getBot().setMode(e.getChannel(), "+1 " + u.getNick());
             } else {
-                e.getBot().sendNotice(e.getUser(), "Usage: quiet <username>");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "Usage: quiet <username>");
             }
         } else {
-            e.getBot().sendNotice(e.getUser(), perms);
+            e.getBot().sendIRC().notice(e.getUser().toString(), perms);
         }
     }
 
@@ -764,10 +764,10 @@ public class Commands {
                 User u = e.getBot().getUser(arguments[1]);
                 e.getBot().setMode(e.getChannel(), "-q " + u.getNick());
             } else {
-                e.getBot().sendNotice(e.getUser(), "Usage: unquiet <username>");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "Usage: unquiet <username>");
             }
         } else {
-            e.getBot().sendNotice(e.getUser(), perms);
+            e.getBot().sendIRC().notice(e.getUser().toString(), perms);
         }
     }
 
@@ -783,15 +783,15 @@ public class Commands {
                     }
                     Config.reload();
                     Config.getConfig().refresh();
-                    Utils.sendNotice(e.getUser(), arguments[1] + " is now an administrator. reloaded the configuration.");
+                    Utils.sendNotice(e.getUser().toString(), arguments[1] + " is now an administrator. reloaded the configuration.");
                 } else {
-                    Utils.sendNotice(e.getUser(), arguments[1] + " is already an admin!");
+                    Utils.sendNotice(e.getUser().toString(), arguments[1] + " is already an admin!");
                 }
             } else {
-                e.getBot().sendNotice(e.getUser(), "Usage: addowner <name>");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "Usage: addowner <name>");
             }
         } else {
-            sendNotice(e.getUser(), perms);
+            sendNotice(e.getUser().toString(), perms);
         }
     }
 
@@ -807,15 +807,15 @@ public class Commands {
                     }
                     Config.reload();
                     Config.getConfig().refresh();
-                    Utils.sendNotice(e.getUser(), arguments[1] + " is now an administrator. reloaded the configuration.");
+                    Utils.sendNotice(e.getUser().toString(), arguments[1] + " is now an administrator. reloaded the configuration.");
                 } else {
-                    Utils.sendNotice(e.getUser(), arguments[1] + " is already an admin!");
+                    Utils.sendNotice(e.getUser().toString(), arguments[1] + " is already an admin!");
                 }
             } else {
-                e.getBot().sendNotice(e.getUser(), "Usage: addowner <name>");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "Usage: addowner <name>");
             }
         } else {
-            sendNotice(e.getUser(), perms);
+            sendNotice(e.getUser().toString(), perms);
         }
     }
 
@@ -840,8 +840,8 @@ public class Commands {
                 }
         }
     }
-    public static void sendNotice(User user, String notice) {
-        Bot.bot.sendNotice(user, notice);
+    public static void sendNotice(String user, String notice) {
+        Bot.bot.sendIRC().notice(user, notice);
     }
 
     public static void ignore(MessageEvent e) {
@@ -856,10 +856,10 @@ public class Commands {
                     e.respond(user.getNick() + " is already in the ignore list");
                 }
             } else {
-                sendNotice(e.getUser(), "usage: $ignore user");
+                sendNotice(e.getUser().toString(), "usage: $ignore user");
             }
         } else {
-            sendNotice(e.getUser(), Commands.perms);
+            sendNotice(e.getUser().toString(), Commands.perms);
         }
     }
 
@@ -886,30 +886,30 @@ public class Commands {
                     def.setProperty(word.toLowerCase(), allargs);
                 }
                 def.save();
-                e.getBot().sendNotice(e.getUser(), "command " + word + " set to " + Utils.colorEncode(allargs.replaceAll("\\\\,", ",")));
+                e.getBot().sendIRC().notice(e.getUser().toString(), "command " + word + " set to " + Utils.colorEncode(allargs.replaceAll("\\\\,", ",")));
             }
             catch (ConfigurationException ex) {
                 Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         else {
-            e.getBot().sendNotice(e.getUser(), "Not enough arguments!");
+            e.getBot().sendIRC().notice(e.getUser().toString(), "Not enough arguments!");
         }
     } else {
-    sendNotice(e.getUser(), perms);
+    sendNotice(e.getUser().toString(), perms);
         }
     }
 
     public static void eat(MessageEvent e) {
         String eaten = e.getMessage().split("eat")[1];
-        e.getBot().sendMessage(e.getChannel(), e.getUser().getNick() + " has eaten" + eaten);
+        e.getBot().sendIRC().message(e.getChannel().toString(), e.getUser().getNick() + " has eaten" + eaten);
     }
 
     public static void setDebug(MessageEvent e) {
         boolean debug = Boolean.valueOf(e.getMessage().split(" ")[1]);
         if (Utils.isAdmin(e.getUser().getNick())) {
             e.getBot().setVerbose(debug);
-            e.getBot().sendNotice(e.getUser(), "debug set to " + String.valueOf(debug));
+            e.getBot().sendIRC().notice(e.getUser().toString(), "debug set to " + String.valueOf(debug));
         }
     }
     
@@ -918,9 +918,9 @@ public class Commands {
             String commandpre = Config.customcmd.getString(e.getMessage().substring(1));
             String cmd = commandpre.replaceAll("color.red", Colors.RED).replaceAll("color.green", Colors.GREEN).replaceAll("colors.red", Colors.RED).replaceAll("colors.bold", Colors.BOLD).replaceAll("colors.normal", Colors.NORMAL);
             if (e.getMessage().startsWith(Config.PUBLIC_IDENTIFIER)) {
-                e.getBot().sendMessage(e.getChannel(), cmd);
+                e.getBot().sendIRC().message(e.getChannel().toString(), cmd);
             } else {
-                e.getBot().sendNotice(e.getUser(), cmd);
+                e.getBot().sendIRC().notice(e.getUser().toString(), cmd);
             }
         }
     }
@@ -946,12 +946,12 @@ public class Commands {
                     def.setProperty(word.toLowerCase(), allargs);
                 }
                 def.save();
-                e.getBot().sendNotice(e.getUser(), "command " + word + " set to " + allargs.replaceAll("color.green", Colors.GREEN).replaceAll("color.red", Colors.RED).replaceAll("color.bold", Colors.BOLD).replaceAll("color.reset", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN));
+                e.getBot().sendIRC().notice(e.getUser().toString(), "command " + word + " set to " + allargs.replaceAll("color.green", Colors.GREEN).replaceAll("color.red", Colors.RED).replaceAll("color.bold", Colors.BOLD).replaceAll("color.reset", Colors.NORMAL).replaceAll("color.darkgreen", Colors.DARK_GREEN));
             } catch (ConfigurationException ex) {
                 Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            e.getBot().sendNotice(e.getUser(), "Not enough arguments!");
+            e.getBot().sendIRC().notice(e.getUser().toString(), "Not enough arguments!");
         }
         } else {
             e.respond(perms);
@@ -967,13 +967,13 @@ public class Commands {
                     Config.customcmd.clearProperty(word);
                     Config.customcmd.save();
                     Config.customcmd.refresh();
-                    e.getBot().sendNotice(e.getUser(), "command " + word + " deleted");
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "command " + word + " deleted");
                 } catch (ConfigurationException ex) {
                     Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
             } else {
-                e.getBot().sendNotice(e.getUser(), "Not enough arguments!");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "Not enough arguments!");
             }
         } else {
             e.respond(perms);
@@ -990,13 +990,13 @@ public class Commands {
         } else {
             String chan = args[1];
             if (!e.getBot().getChannelsNames().contains(chan)) {
-                e.getBot().sendNotice(e.getUser(), "I'm not in that channel!");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "I'm not in that channel!");
             }
             e.getBot().partChannel(e.getBot().getChannel(chan));
             e.getBot().joinChannel(chan);
         }
     } else {
-            sendNotice(e.getUser(), perms);
+            sendNotice(e.getUser().toString(), perms);
         }
     }
 
@@ -1025,7 +1025,7 @@ public class Commands {
         if (e.getMessage().startsWith(Config.PUBLIC_IDENTIFIER)) {
             e.respond("ENCRYPTED STRING: " + s);
         } else {
-            Utils.sendNotice(e.getUser(), "ENCRYPTED STRING: " + s);
+            Utils.sendNotice(e.getUser().toString(), "ENCRYPTED STRING: " + s);
         }        
     }
 
@@ -1066,7 +1066,7 @@ public class Commands {
 			//ex.printStackTrace();
 			returns = ex.toString();
 		}
-		e.getBot().sendMessage(e.getChannel(), returns);
+		e.getBot().sendIRC().message(e.getChannel().toString(), returns);
 	}
 
 	public static void spy(MessageEvent e) {
@@ -1076,13 +1076,13 @@ public class Commands {
 		Channel relayto = e.getChannel();
 		if(Bot.relay.containsKey(spychan)){
 			Bot.relay.remove(spychan);
-			e.getBot().sendMessage(e.getChannel(), "no longer spying on channel " + spychan.getName());
+			e.getBot().sendIRC().message(e.getChannel().toString(), "no longer spying on channel " + spychan.getName());
 			return;
 		}
 		Bot.relay.put(spychan, relayto);
-		e.getBot().sendMessage(e.getChannel(), "now spying on channel " + spychan.getName());
+		e.getBot().sendIRC().message(e.getChannel().toString(), "now spying on channel " + spychan.getName());
             } else {
-            sendNotice(e.getUser(), perms);
+            sendNotice(e.getUser().toString(), perms);
         } 
 }
 
@@ -1130,9 +1130,9 @@ public class Commands {
             String z = y.replaceAll(">", "");
             Boolean b = Utils.checkAccount(args[2]);
                 if (b) {
-               	e.getBot().sendMessage(e.getChannel(), z + ": " + args[2] + Colors.GREEN + " has " + Colors.NORMAL + "paid for minecraft");
+               	e.getBot().sendIRC().message(e.getChannel().toString(), z + ": " + args[2] + Colors.GREEN + " has " + Colors.NORMAL + "paid for minecraft");
                 } else {
-                	e.getBot().sendMessage(e.getChannel(), z + ": " + args[2] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
+                	e.getBot().sendIRC().message(e.getChannel().toString(), z + ": " + args[2] + Colors.RED + " has not " + Colors.NORMAL + "paid for minecraft");
                 }
         }
 
@@ -1141,122 +1141,122 @@ public class Commands {
     public static void help(MessageEvent e) {
             String[] args = e.getMessage().split(" ");
             if (args.length == 1) {
-                e.getBot().sendNotice(e.getUser(), "Chans, Cinsult, CRstatus, Cycle, Debug[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Deop[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], DelCmd[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], DeVoice[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Google, Gsay, Ignore[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Insult, Join[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Mcstatus, Murder[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Nick[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Op[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "]");
-                e.getBot().sendNotice(e.getUser(), "Paid, Part, Query, Quiet[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Raw[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "],Request[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Reload[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Say, SetCmd[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Shorten, Skin, UnIgnore[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], UnQuiet[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], URL, Voice[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Wiki, YouTube");
-                e.getBot().sendNotice(e.getUser(), "------------------NOTES------------------");
-                e.getBot().sendNotice(e.getUser(), Colors.RED + "[Not requied as of 12/13/2013] " + Colors.NORMAL+ "A '#' is always required in the channel name!  |  " + Config.PUBLIC_IDENTIFIER + "join " + Colors.GREEN + "#batman" + Colors.NORMAL + " | Not " + Config.PUBLIC_IDENTIFIER + "join " + Colors.RED + "batman");
-                sendNotice(e.getUser(), "The " + Config.PUBLIC_IDENTIFIER + "wiki command is still being worked on at the moment to support more Wikies.");
-                sendNotice(e.getUser(), "Not all commands are listed here :P ");
-                sendNotice(e.getUser(), "To people with Voice: Even if you aren't Admin for the bot, you do have access to few commands. Test to see which ones :3 ");
-                sendNotice(e.getUser(), "To pople with OP: You have access to most of the commands for the! ");
-                e.getBot().sendNotice(e.getUser(), "--------------------------------------------");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "Chans, Cinsult, CRstatus, Cycle, Debug[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Deop[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], DelCmd[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], DeVoice[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Google, Gsay, Ignore[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Insult, Join[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Mcstatus, Murder[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Nick[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Op[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "]");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "Paid, Part, Query, Quiet[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Raw[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "],Request[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Reload[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Say, SetCmd[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Shorten, Skin, UnIgnore[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], UnQuiet[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], URL, Voice[" + Colors.YELLOW + "Admin" + Colors.NORMAL + "], Wiki, YouTube");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "------------------NOTES------------------");
+                e.getBot().sendIRC().notice(e.getUser().toString(), Colors.RED + "[Not requied as of 12/13/2013] " + Colors.NORMAL+ "A '#' is always required in the channel name!  |  " + Config.PUBLIC_IDENTIFIER + "join " + Colors.GREEN + "#batman" + Colors.NORMAL + " | Not " + Config.PUBLIC_IDENTIFIER + "join " + Colors.RED + "batman");
+                sendNotice(e.getUser().toString(), "The " + Config.PUBLIC_IDENTIFIER + "wiki command is still being worked on at the moment to support more Wikies.");
+                sendNotice(e.getUser().toString(), "Not all commands are listed here :P ");
+                sendNotice(e.getUser().toString(), "To people with Voice: Even if you aren't Admin for the bot, you do have access to few commands. Test to see which ones :3 ");
+                sendNotice(e.getUser().toString(), "To pople with OP: You have access to most of the commands for the! ");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "--------------------------------------------");
             }
             if (args.length == 2) {
                 String commandname = args[1];
                 if (commandname.equalsIgnoreCase("Chans")) {
-                    e.getBot().sendNotice(e.getUser(), "Lists the channels the bot is currently in.  |  " + Config.PUBLIC_IDENTIFIER + "chans" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Lists the channels the bot is currently in.  |  " + Config.PUBLIC_IDENTIFIER + "chans" );
                 }
                 if (commandname.equalsIgnoreCase("Cycle")) {
-                    e.getBot().sendNotice(e.getUser(), "Cycles the specified [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "], if no channel name is specified it will cycle the channel the command was sent from.  |  " + Config.PUBLIC_IDENTIFIER + "cycle OR " + Config.PUBLIC_IDENTIFIER + "cycle [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Cycles the specified [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "], if no channel name is specified it will cycle the channel the command was sent from.  |  " + Config.PUBLIC_IDENTIFIER + "cycle OR " + Config.PUBLIC_IDENTIFIER + "cycle [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Debug")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sets the bot to debug (verbose) mode in system.out.  |  " + Config.PUBLIC_IDENTIFIER + "debug true/false" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sets the bot to debug (verbose) mode in system.out.  |  " + Config.PUBLIC_IDENTIFIER + "debug true/false" );
                 }
                 if (commandname.equalsIgnoreCase("Deop")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s operator status in the channel (Note: This DOES NOT take the op flags, just op.)  |  " + Config.PUBLIC_IDENTIFIER + "deop [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s operator status in the channel (Note: This DOES NOT take the op flags, just op.)  |  " + Config.PUBLIC_IDENTIFIER + "deop [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("DeVoice")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes voice from the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] (Note: This DOES NOT take the voice flags, just voice.)  |  " + Config.PUBLIC_IDENTIFIER + "devoice [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes voice from the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] (Note: This DOES NOT take the voice flags, just voice.)  |  " + Config.PUBLIC_IDENTIFIER + "devoice [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Google")) {
-                    e.getBot().sendNotice(e.getUser(), "Googles the specified query and returns the first result.  |  " + Config.PUBLIC_IDENTIFIER + "google [" + Colors.GREEN + "search" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Googles the specified query and returns the first result.  |  " + Config.PUBLIC_IDENTIFIER + "google [" + Colors.GREEN + "search" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Gsay")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sends a message to the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] or [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]. (Note: Bot must be in the channel)  |  " + Config.PUBLIC_IDENTIFIER + "gsay [" + Colors.GREEN + "user" + Colors.NORMAL + "/" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "] [message]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sends a message to the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] or [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]. (Note: Bot must be in the channel)  |  " + Config.PUBLIC_IDENTIFIER + "gsay [" + Colors.GREEN + "user" + Colors.NORMAL + "/" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "] [message]" );
                 }
                 if (commandname.equalsIgnoreCase("Ignore")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Ignore all commands from [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s hostmask.  |  " + Config.PUBLIC_IDENTIFIER + "ignore [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Ignore all commands from [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s hostmask.  |  " + Config.PUBLIC_IDENTIFIER + "ignore [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Join")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Joins the specified [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]. Must start with '#' |  " + Config.PUBLIC_IDENTIFIER + "Join [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Joins the specified [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]. Must start with '#' |  " + Config.PUBLIC_IDENTIFIER + "Join [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Murder")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Immediately stops the bot.  |  " + Config.PUBLIC_IDENTIFIER + "Murder" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Immediately stops the bot.  |  " + Config.PUBLIC_IDENTIFIER + "Murder" );
                 }
                 if (commandname.equalsIgnoreCase("MCStatus")) {
-                    e.getBot().sendNotice(e.getUser(), "Tells you the status of the minecraft internal servers (auth, login, session, etc)  |  " + Config.PUBLIC_IDENTIFIER + "mcstatus" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Tells you the status of the minecraft internal servers (auth, login, session, etc)  |  " + Config.PUBLIC_IDENTIFIER + "mcstatus" );
                 }
                 if (commandname.equalsIgnoreCase("Nick")) {
-                    e.getBot().sendNotice(e.getUser(), "Changes the bot's nickname.  |  " + Config.PUBLIC_IDENTIFIER + "nick [name]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Changes the bot's nickname.  |  " + Config.PUBLIC_IDENTIFIER + "nick [name]" );
                 }
                 if (commandname.equalsIgnoreCase("Op")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Gives the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] operator status in the channel (Note: This DOES NOT give them the op flags, just op.)  |  " + Config.PUBLIC_IDENTIFIER + "op [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Gives the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] operator status in the channel (Note: This DOES NOT give them the op flags, just op.)  |  " + Config.PUBLIC_IDENTIFIER + "op [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Part")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Parts the specified channel. If no channel is given, It will part the channel the command was sent from.  |  " + Config.PUBLIC_IDENTIFIER + "part [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Parts the specified channel. If no channel is given, It will part the channel the command was sent from.  |  " + Config.PUBLIC_IDENTIFIER + "part [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Paid")) {
-                    e.getBot().sendNotice(e.getUser(), "Tells you if [" + Colors.GREEN + "user" + Colors.NORMAL + "] has a paid minecraft account.  |  " + Config.PUBLIC_IDENTIFIER + "paid [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Tells you if [" + Colors.GREEN + "user" + Colors.NORMAL + "] has a paid minecraft account.  |  " + Config.PUBLIC_IDENTIFIER + "paid [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Uptime")) {
-                    e.getBot().sendNotice(e.getUser(), "Show the amount of time the bot has been running for.  |  " + Config.PUBLIC_IDENTIFIER + "uptime" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Show the amount of time the bot has been running for.  |  " + Config.PUBLIC_IDENTIFIER + "uptime" );
                 }
                 if (commandname.equalsIgnoreCase("Query")) {
-                    e.getBot().sendNotice(e.getUser(), "Queries the specified minecraft server and returns the player count and MOTD.  |  " + Config.PUBLIC_IDENTIFIER + "query [serverIP] OR " + Config.PUBLIC_IDENTIFIER + "query [serverIP] [port]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Queries the specified minecraft server and returns the player count and MOTD.  |  " + Config.PUBLIC_IDENTIFIER + "query [serverIP] OR " + Config.PUBLIC_IDENTIFIER + "query [serverIP] [port]" );
                 }
                 if (commandname.equalsIgnoreCase("Quiet")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Mutes the specified user by setting the +q flag on them.  |  " + Config.PUBLIC_IDENTIFIER + "quiet [user]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Mutes the specified user by setting the +q flag on them.  |  " + Config.PUBLIC_IDENTIFIER + "quiet [user]" );
                 }
                 if (commandname.equalsIgnoreCase("Raw")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "] Sends a raw line to the irc server.  |  Example: " + Config.PUBLIC_IDENTIFIER + "raw privmsg #chan :boo! --- Send a message to Channel '#chan' which says 'boo' --- '#chan' can be replaced by with user and privmsg can be replaced by variety of things" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "] Sends a raw line to the irc server.  |  Example: " + Config.PUBLIC_IDENTIFIER + "raw privmsg #chan :boo! --- Send a message to Channel '#chan' which says 'boo' --- '#chan' can be replaced by with user and privmsg can be replaced by variety of things" );
                 }
                 if (commandname.equalsIgnoreCase("Reload")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Reloads the bot's configuration.  |  " + Config.PUBLIC_IDENTIFIER + "reload" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Reloads the bot's configuration.  |  " + Config.PUBLIC_IDENTIFIER + "reload" );
                 }
                 if (commandname.equalsIgnoreCase("Say")) {
-                    e.getBot().sendNotice(e.getUser(), "Sends a message to the [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "] you're in.  |  " + Config.PUBLIC_IDENTIFIER + "say [message]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Sends a message to the [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "] you're in.  |  " + Config.PUBLIC_IDENTIFIER + "say [message]" );
                 }
                 if (commandname.equalsIgnoreCase("Setcmd")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sets the custom command to the specified text. You can run said command as you would any other.  |  " + Config.PUBLIC_IDENTIFIER + "setcmd [" + Colors.BLUE + "command" + Colors.NORMAL + "] [" + Colors.GREEN + "text" + Colors.NORMAL + "] --- typing " + Config.PUBLIC_IDENTIFIER + "" + Colors.BLUE + "command" + Colors.NORMAL + " will say '" + Colors.GREEN + "text" + Colors.NORMAL + "'" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Sets the custom command to the specified text. You can run said command as you would any other.  |  " + Config.PUBLIC_IDENTIFIER + "setcmd [" + Colors.BLUE + "command" + Colors.NORMAL + "] [" + Colors.GREEN + "text" + Colors.NORMAL + "] --- typing " + Config.PUBLIC_IDENTIFIER + "" + Colors.BLUE + "command" + Colors.NORMAL + " will say '" + Colors.GREEN + "text" + Colors.NORMAL + "'" );
                 }
                 if (commandname.equalsIgnoreCase("Unignore")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s hostmask from the ignore list.  |  " + Config.PUBLIC_IDENTIFIER + "unignore [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Removes [" + Colors.GREEN + "user" + Colors.NORMAL + "]'s hostmask from the ignore list.  |  " + Config.PUBLIC_IDENTIFIER + "unignore [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("UnQuiet")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Un-Mutes the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] by setting the -q flag on them.  |  " + Config.PUBLIC_IDENTIFIER + "UnQuiet [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Un-Mutes the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] by setting the -q flag on them.  |  " + Config.PUBLIC_IDENTIFIER + "UnQuiet [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Voice")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Gives the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] voice (Note: This DOES NOT give them the voice flags, just voice.)  |  " + Config.PUBLIC_IDENTIFIER + "Voice [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin" + Colors.NORMAL + "]Gives the specified [" + Colors.GREEN + "user" + Colors.NORMAL + "] voice (Note: This DOES NOT give them the voice flags, just voice.)  |  " + Config.PUBLIC_IDENTIFIER + "Voice [" + Colors.GREEN + "user" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Skin")) {
-                    e.getBot().sendNotice(e.getUser(), "Gets the Minecraft skin for the specified " + Colors.GREEN + "username" + Colors.NORMAL + " (Must be In-game Minecraft name).  |  " + Config.PUBLIC_IDENTIFIER + "skin [Minecraft " + Colors.GREEN + "username" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Gets the Minecraft skin for the specified " + Colors.GREEN + "username" + Colors.NORMAL + " (Must be In-game Minecraft name).  |  " + Config.PUBLIC_IDENTIFIER + "skin [Minecraft " + Colors.GREEN + "username" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("Insult")) {
-                    e.getBot().sendNotice(e.getUser(), "Says a random shakespearean insult.  |  " + Config.PUBLIC_IDENTIFIER + "insult" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Says a random shakespearean insult.  |  " + Config.PUBLIC_IDENTIFIER + "insult" );
                 }
                 if (commandname.equalsIgnoreCase("cinsult")) {
-                    e.getBot().sendNotice(e.getUser(), "(Channel Insult) Bot joins the specified channel and uses '" + Config.PUBLIC_IDENTIFIER + "insult' command.  |  " + Config.PUBLIC_IDENTIFIER + "cinsult [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "(Channel Insult) Bot joins the specified channel and uses '" + Config.PUBLIC_IDENTIFIER + "insult' command.  |  " + Config.PUBLIC_IDENTIFIER + "cinsult [" + Colors.MAGENTA + "#channel" + Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("DelCmd")) {
-                    e.getBot().sendNotice(e.getUser(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Delete a custom command that was created previously.  |  " + Config.PUBLIC_IDENTIFIER + "delcmd [" + Colors.GREEN + "Custom Command Name" + Colors.NORMAL + "]");
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Delete a custom command that was created previously.  |  " + Config.PUBLIC_IDENTIFIER + "delcmd [" + Colors.GREEN + "Custom Command Name" + Colors.NORMAL + "]");
                 }
                 if (commandname.equalsIgnoreCase("shorten")) {
-                    e.getBot().sendNotice(e.getUser(), "Shortens the " + Colors.GREEN + "url" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "shorten [" + Colors.GREEN + "url" +Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Shortens the " + Colors.GREEN + "url" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "shorten [" + Colors.GREEN + "url" +Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("wiki")) {
-                    e.getBot().sendNotice(e.getUser(), "Search Feed The Beast Wiki.  |  "  + Config.PUBLIC_IDENTIFIER + "wiki [" + Colors.GREEN + "Item/Block/Mod name" +Colors.NORMAL + "]" );
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Search Feed The Beast Wiki.  |  "  + Config.PUBLIC_IDENTIFIER + "wiki [" + Colors.GREEN + "Item/Block/Mod name" +Colors.NORMAL + "]" );
                 }
                 if (commandname.equalsIgnoreCase("youtube")) {
-                    sendNotice(e.getUser(), "Search YouTube with the specified " + Colors.GREEN + "query" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "youtube [" + Colors.GREEN + "query" + Colors.NORMAL + "]");
+                    sendNotice(e.getUser().toString(), "Search YouTube with the specified " + Colors.GREEN + "query" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "youtube [" + Colors.GREEN + "query" + Colors.NORMAL + "]");
                 }
                 if (commandname.equalsIgnoreCase("request")) {
-                    sendNotice(e.getUser(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Send a request note to the bot owner.  |  " + Config.PUBLIC_IDENTIFIER + "request [" + Colors.GREEN + "Note to send" + Colors.NORMAL + "]");
+                    sendNotice(e.getUser().toString(), "[" + Colors.RED + "Admin/Voice" + Colors.NORMAL + "]Send a request note to the bot owner.  |  " + Config.PUBLIC_IDENTIFIER + "request [" + Colors.GREEN + "Note to send" + Colors.NORMAL + "]");
                 }
                 if (commandname.equalsIgnoreCase("Chstatus")){
-                    sendNotice(e.getUser(), "Tells you the status of the CreeperHost servers status (England, Los Angeles, Atlanta, etc)  |  " + Config.PUBLIC_IDENTIFIER + Colors.GREEN + "CHstatus");
+                    sendNotice(e.getUser().toString(), "Tells you the status of the CreeperHost servers status (England, Los Angeles, Atlanta, etc)  |  " + Config.PUBLIC_IDENTIFIER + Colors.GREEN + "CHstatus");
                 }
                 if (commandname.equalsIgnoreCase("url")) {
-                    sendNotice(e.getUser(), "Gets the title for a " + Colors.GREEN + "Webpage URL" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "url [" + Colors.GREEN + "webpage URL" + Colors.NORMAL + "]");
+                    sendNotice(e.getUser().toString(), "Gets the title for a " + Colors.GREEN + "Webpage URL" + Colors.NORMAL + ".  |  " + Config.PUBLIC_IDENTIFIER + "url [" + Colors.GREEN + "webpage URL" + Colors.NORMAL + "]");
                 }
             }
                 
@@ -1284,22 +1284,22 @@ public class Commands {
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
-            e.getBot().sendMessage(e.getChannel(), message + ": " + finalurl);
+            e.getBot().sendIRC().message(e.getChannel().toString(), message + ": " + finalurl);
     }
     
     public static void checkAdmin (MessageEvent e) {
         if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
             if (Utils.isAdmin(e.getUser().getNick())) {
-            e.getBot().sendMessage(e.getChannel(), "You are an Admin :D");
+            e.getBot().sendIRC().message(e.getChannel().toString(), "You are an Admin :D");
             }
             if (e.getChannel().hasVoice(e.getUser())) {
-                e.getBot().sendMessage(e.getChannel(), "You are not an Admin but have limited access because of Voice");
+                e.getBot().sendIRC().message(e.getChannel().toString(), "You are not an Admin but have limited access because of Voice");
             }
             if (e.getChannel().isOp(e.getUser())) {
-                e.getBot().sendMessage(e.getChannel(), "You are not an Admin but because you have OP, you have access.");
+                e.getBot().sendIRC().message(e.getChannel().toString(), "You are not an Admin but because you have OP, you have access.");
             }
         } else {
-            e.getBot().sendMessage(e.getChannel(), e.getUser().getNick() + ": NO NO NO! NOT TODAY!");
+            e.getBot().sendIRC().message(e.getChannel().toString(), e.getUser().getNick() + ": NO NO NO! NOT TODAY!");
         }
             
     }
@@ -1307,15 +1307,15 @@ public class Commands {
     public static void java(MessageEvent e) {
         String[] args = e.getMessage().split(" ");
         if (args.length == 2) {
-            e.getBot().sendNotice(args[1], "64Bit http://javadl.sun.com/webapps/download/AutoDL?BundleId=81821");
-            e.getBot().sendNotice(args[1], "32Bit http://javadl.sun.com/webapps/download/AutoDL?BundleId=81819");
+            e.getBot().sendIRC().notice(args[1], "64Bit http://javadl.sun.com/webapps/download/AutoDL?BundleId=81821");
+            e.getBot().sendIRC().notice(args[1], "32Bit http://javadl.sun.com/webapps/download/AutoDL?BundleId=81819");
         }
     }
     
     public static void MacJava(MessageEvent e){
         String[] args = e.getMessage().split(" ");
         if (args.length == 2) {
-            e.getBot().sendNotice(args[1], "http://is.gd/oQWJOY");
+            e.getBot().sendIRC().notice(args[1], "http://is.gd/oQWJOY");
         }
     }
 
@@ -1470,7 +1470,7 @@ public class Commands {
                           + LA
                           + LAcheck
                               ;
-                      e.getBot().sendMessage(e.getChannel(), P);
+                      e.getBot().sendIRC().message(e.getChannel().toString(), P);
             } catch (Exception e2) {
                 e2.printStackTrace();
             }
@@ -1506,7 +1506,7 @@ public class Commands {
                     
                 }
                 def.save();
-                e.getBot().sendNotice(e.getUser(),"You request was added :D");
+                e.getBot().sendIRC().notice(e.getUser().toString(),"You request was added :D");
             } catch (ConfigurationException ex) {
                 Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1523,13 +1523,13 @@ public class Commands {
                     Config.add.clearProperty(date+name);
                     Config.add.save();
                     Config.add.refresh();
-                    e.getBot().sendNotice(e.getUser(), "Request from  " + date + " was deleted.");
+                    e.getBot().sendIRC().notice(e.getUser().toString(), "Request from  " + date + " was deleted.");
                 } catch (ConfigurationException ex) {
                     Logger.getLogger(Commands.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
             } else {
-                e.getBot().sendNotice(e.getUser(), "Not enough arguments!");
+                e.getBot().sendIRC().notice(e.getUser().toString(), "Not enough arguments!");
             }
     
         }

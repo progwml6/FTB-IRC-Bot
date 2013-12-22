@@ -30,5 +30,6 @@ dependencies {
     compile 'commons-logging:commons-logging:1.1.3'
     compile 'com.google.gwt.google-apis:gwt-ajaxloader:1.1.0'
 	compile 'com.google.code.gson:gson:2.2.4'
+	compile 'com.google.collections:google-collections:1.0'
     compile 'commons-configuration:commons-configuration:1.10'
 }

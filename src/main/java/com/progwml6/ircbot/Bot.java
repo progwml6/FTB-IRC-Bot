@@ -107,14 +107,14 @@ public class Bot extends ListenerAdapter{
         		User x = e.getBot().getUser(args[0]);
         		if (commandname.equalsIgnoreCase("join")) {
         			 String join = args[1];
-                                 e.getBot().joinChannel(join);
+                                 e.getBot().sendIRC().joinChannel(join);
         		} else {
                             e.respond(perms);
                         }
             }
             if (commandname.equalsIgnoreCase("rejoin")){
                 for (String s : Config.CHANS) {
-                bot.joinChannel(s);
+               e.getBot().sendIRC().joinChannel(s);
                 System.out.println("Joined channel " + s);
             }
             }
@@ -171,7 +171,7 @@ public class Bot extends ListenerAdapter{
             }
         }
         if(relay.containsKey(e.getChannel())){
-        	bot.sendMessage(relay.get(e.getChannel()), "[" + e.getChannel().getName() + "] <" + e.getUser().getNick() + "> " + e.getMessage());
+            e.getBot().sendIRC().message(relay.get(e.getChannel()).toString(), "[" + e.getChannel().getName() + "] <" + e.getUser().getNick() + "> " + e.getMessage());
         }
         if (e.getMessage().startsWith(Config.PUBLIC_IDENTIFIER) || e.getMessage().startsWith(Config.NOTICE_IDENTIFIER)) {
             if (ignored.contains(e.getUser().getHostmask())) {
@@ -234,7 +234,7 @@ public class Bot extends ListenerAdapter{
         }
         
         if (command.equalsIgnoreCase("irc")) {
-        	bot.sendMessage(e.getChannel(), "http://webchat.esper.net/?nick=&channels=flakeynoobzone") ;
+            e.getBot().sendIRC().message(e.getChannel().toString(), "http://webchat.esper.net/?nick=&channels=flakeynoobzone") ;
         }
         
         if (command.equalsIgnoreCase("kick")) {
@@ -316,7 +316,7 @@ public class Bot extends ListenerAdapter{
             Commands.op(e);
         }
         if (command.equalsIgnoreCase("reload")) {
-            e.getBot().sendMessage(e.getChannel(), "Configuration reloaded!");
+            e.getBot().sendIRC().message(e.getChannel().toString(), "Configuration reloaded!");
             try {
                 Config.reload();
             } catch (Exception e1) {
@@ -453,18 +453,18 @@ public class Bot extends ListenerAdapter{
             b.close();
             allowed.addAll(Arrays.asList(names));
         } catch (Exception e) {
-            User u = bot.getUser("zack6849");
-            bot.sendNotice(u, "Error whilst fetching acess list! " + e.getCause() + " " + e.getMessage());
+            bot.sendIRC().notice("zack6849", "Error whilst fetching acess list! " + e.getCause() + " " + e.getMessage());
         }
     }
     @Override
 	public void onInvite(InviteEvent e){
     	if(Config.ACCEPT_INVITES){
-    		e.getBot().joinChannel(e.getChannel());
+    		e.getBot().sendIRC().joinChannel(e.getChannel());
     	}
     }
     private static void sendNotice(User user, String notice) {
-        Bot.bot.sendNotice(user, notice);
+       
+        Bot.bot.sendIRC().notice(user.toString(), notice);
     }
     
     public void checkSpam(final MessageEvent e){
