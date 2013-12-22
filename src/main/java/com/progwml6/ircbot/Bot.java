@@ -1,10 +1,12 @@
 package com.progwml6.ircbot;
 
 import static com.progwml6.ircbot.Commands.perms;
-import java.awt.BorderLayout;
-import javax.swing.*;
-import java.awt.*;
 
+import java.awt.BorderLayout;
+
+import javax.swing.*;
+
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.util.logging.Logger;
 
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
+import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -52,24 +55,34 @@ public class Bot extends ListenerAdapter{
     
     public static void start() {
         try {
-            bot = new PircBotX();
             Config.loadConfig();
+            Configuration configuration = new Configuration.Builder()
+            .setName(Config.NICK) //Set the nick of the bot. CHANGE IN YOUR CODE
+            .setLogin(Config.IDENT) //login part of hostmask, eg name:login@host
+            .setNickservPassword(Config.PASSWORD)
+            .setAutoNickChange(true) //Automatically change nick when the current one is in use
+            .setCapEnabled(true) //Enable CAP features
+            .addListener(new Bot()) //This class is a listener, so add it to the bots known listeners
+            .setServerHostname(Config.SERVER)
+            .addAutoJoinChannel("#batbot") //Join the official #pircbotx channel
+            .buildConfiguration();
+
+            bot = new PircBotX(null);
+
             System.out.println(String.format("=======\nSETTINGS\n=======\nBOT-NICKNAME: %s\nBOT-IDENT: %s\nIDENTIFY-WITH-NICKSERV: %s\nVERIFY ADMIN NICKNAMES: %s\nAWAY: %s\nNOTICE: %s\nNOTICE IDENTIFIER: %s\nPUBLIC_IDENTIFIER: %s\n=======\nSETTINGS\n=======\n\n\n", Config.NICK, Config.IDENT, Config.IDENTIFY_WITH_NICKSERV, Config.VERIFY_ADMIN_NICKS,Config.AWAY, Config.NOTICE, Config.NOTICE_IDENTIFIER, Config.PUBLIC_IDENTIFIER));
-            bot.setLogin("Alphabot|batman");
-            bot.setName(Config.NICK);
-            bot.setVersion("Batbot V1.8 [Original by zack6849]");
-            bot.setFinger("oh god what are you doing");
-            bot.setVerbose(Config.DEBUG_MODE);
-            bot.connect(Config.SERVER);
-            if(Config.IDENTIFY_WITH_NICKSERV){
-            	 bot.identify(Config.PASSWORD);
-            }
+           // bot.setVersion("Batbot V1.8 [Original by zack6849]");
+            //bot.setFinger("oh god what are you doing");
+           // bot.setVerbose(Config.DEBUG_MODE);
+            bot.startBot();
+           // if(Config.IDENTIFY_WITH_NICKSERV){
+            //	 bot.identify(Config.PASSWORD);
+           // }
             allowed = Config.ADMINS;
             for (String s : Config.CHANS) {
                 bot.joinChannel(s);
                 System.out.println("Joined channel " + s);
             }
-            bot.getListenerManager().addListener(new Bot());
+            //bot.getListenerManager().addListener(new Bot());
         } catch (Exception e) {
             e.printStackTrace();
         }
