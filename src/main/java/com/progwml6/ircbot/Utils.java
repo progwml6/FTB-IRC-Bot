@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.progwml6.ircbot;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -30,12 +27,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
+import org.pircbotx.hooks.WaitForQueue;
 import org.pircbotx.hooks.events.WhoisEvent;
+
 
 
 import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
@@ -103,12 +103,9 @@ public class Utils {
     public static String getAccount(User u){
     	String returns = "";
     	try {
-    		Bot.bot.sendRawLine("WHOIS " + u.getNick() + " " + u.getNick());
-    		WhoisEvent event = Bot.bot.waitFor(WhoisEvent.class);
-    		String tmp = event.getRegisteredAs();
-    		if(tmp != null){
-    			returns = tmp;
-    		}
+    	    Bot.bot.sendRaw().rawLineNow("WHOIS " + u.getNick() + " " + u.getNick());
+            WaitForQueue queue = new WaitForQueue(Bot.bot);
+            WhoisEvent event = queue.waitFor(WhoisEvent.class);
     	} catch (InterruptedException e) {
     		// TODO Auto-generated catch block
     		e.printStackTrace();

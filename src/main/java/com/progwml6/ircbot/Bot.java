@@ -175,7 +175,7 @@ public class Bot extends ListenerAdapter{
         }
         if (e.getMessage().startsWith(Config.PUBLIC_IDENTIFIER) || e.getMessage().startsWith(Config.NOTICE_IDENTIFIER)) {
             if (ignored.contains(e.getUser().getHostmask())) {
-                Commands.sendNotice(e.getUser(), "Sorry, you've been ignored by the bot.");
+                Commands.sendNotice(e.getUser().toString(), "Sorry, you've been ignored by the bot.");
                 return;
             }
             
@@ -486,18 +486,18 @@ public class Bot extends ListenerAdapter{
     					users.remove(e.getUser().getNick());
     				}else{
     					if((Integer) violation.get(e.getUser().getNick()) > 3){
-    						e.getBot().kick(e.getChannel(), e.getUser(), "Calm your tits bro.");
+    						e.getChannel().send().kick(e.getUser(), "Calm your tits bro.");
     						violation.put(e.getUser().getNick(), 0);
     						return;
     					}
     					//System.out.println("User already in list. muting");	
-    					e.getBot().setMode(e.getChannel(), "+q ", e.getUser().getHostmask());
+    					e.getChannel().send().setMode("+q ", e.getUser().getHostmask());
     					users.remove(e.getUser().getNick());
     					//System.out.println("muted.");
-    					Utils.sendNotice(e.getUser(), "You've been muted temporarily for spam.");
+    					Utils.sendNotice(e.getUser().toString(), "You've been muted temporarily for spam.");
     					Thread.sleep(1000 * 10);
     					//System.out.println("unmuted");
-    					e.getBot().setMode(e.getChannel(), "-q ", e.getUser().getHostmask());
+    					e.getChannel().send().setMode( "-q ", e.getUser().getHostmask());
     				}
     			}catch(Exception e){
     				e.printStackTrace();

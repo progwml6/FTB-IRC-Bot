@@ -5,12 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
-
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,17 +18,14 @@ import java.util.logging.Logger;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Arrays;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
-
 import java.text.ParseException;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.StringEscapeUtils;
-
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.User;
@@ -39,12 +34,14 @@ import org.pircbotx.hooks.events.MessageEvent;
 import org.pircbotx.hooks.events.WhoisEvent;
 
 import bsh.Interpreter;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.pircbotx.hooks.events.PrivateMessageEvent;
 
 
@@ -109,7 +106,7 @@ public class Commands {
         if (Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser()) || e.getChannel().isOp(e.getUser())) {
         String[] args = e.getMessage().split(" ");
         String join = args[1];
-        Channel chan = e.getBot()..getChannel(args[1]);
+        Channel chan = e.getBot().getChannel(args[1]);
         String insult1 = null;
         do {
         try {
@@ -133,7 +130,7 @@ public class Commands {
         e.getBot().sendIRC().joinChannel(join);
         e.getBot().sendIRC().message(join, insult1);
         Thread.sleep(50);
-        e.getBot().partChannel(chan);
+        e.getBot().sendIRC().partChannel(chan);
     } else {
             sendNotice(e.getUser().toString(), perms);
         }
@@ -344,7 +341,14 @@ public class Commands {
         String[] args = e.getMessage().split(" ");
         if (args.length == 2) {
             if (StringUtils.isNumeric(args[1])) {
-                e.getBot().setMessageDelay(Integer.valueOf(args[1]));
+                try
+                {
+                    e.getBot().sendIRC().wait(Long.valueOf(args[1]));
+                }
+                catch (NumberFormatException | InterruptedException e1)
+                {
+                    e1.printStackTrace();
+                }
                 sendNotice(e.getUser().toString(), "Message delay set to " + Integer.valueOf(args[1]) + " milliseconds!");
             } else {
                 sendNotice(e.getUser().toString(), "The argument " + args[1] + " is not a number!");
@@ -668,7 +672,7 @@ public class Commands {
 
     public static void killPM(PrivateMessageEvent e) {
       if (Utils.isAdmin(e.getUser().getNick())) {
-        for (Channel ch : e.getBot().getChannels()) {
+        for (Channel ch : e.getUser().getChannels()) {
             e.getBot().sendRaw().rawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
         }
       }else{
@@ -677,7 +681,7 @@ public class Commands {
     }
     public static void kill(MessageEvent e) {
         if (Utils.isAdmin(e.getUser().getNick())) {
-        for (Channel ch : e.getBot().getChannels()) {
+        for (Channel ch : e.getUser().getChannels()) {
             e.getBot().sendRaw().rawLine("PART "+ ch.getName() + " : I HOPE YOU BURN IN HELL " + e.getUser().getNick() + ">:|");
         }
       }else{
@@ -705,7 +709,7 @@ public class Commands {
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
                 e.getBot().sendIRC().message(e.getChannel().toString(), "Sorry " + u.getNick() + " </3");
-                e.getBot().deOp(e.getChannel(), u);
+                e.getChannel().send().deOp(u);
             } else {
                 e.respond("Usage: deop <username>");
             }
@@ -719,7 +723,7 @@ public class Commands {
             String[] arguments = e.getMessage().split(" ");
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
-                e.getBot().voice(e.getChannel(), u);
+                e.getChannel().send().voice(u);
             } else {
                 e.respond("Usage: voice <username>");
             }
@@ -733,7 +737,7 @@ public class Commands {
             String[] arguments = e.getMessage().split(" ");
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
-                e.getBot().deVoice(e.getChannel(), u);
+                e.getChannel().send().deVoice(u);
             } else {
                 e.respond("Usage: devoice <username>");
             }
@@ -747,7 +751,7 @@ public class Commands {
         if (e.getChannel().getOps().contains(e.getUser()) || Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser())) {
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
-                e.getBot().setMode(e.getChannel(), "+1 " + u.getNick());
+                e.getChannel().send().setMode( "+1 " + u.getNick());
             } else {
                 e.getBot().sendIRC().notice(e.getUser().toString(), "Usage: quiet <username>");
             }
@@ -761,7 +765,7 @@ public class Commands {
         if (e.getChannel().isOp(e.getUser()) || e.getChannel().hasVoice(e.getUser()) || Utils.isAdmin(e.getUser().getNick())) {
             if (arguments.length == 2) {
                 User u = e.getBot().getUser(arguments[1]);
-                e.getBot().setMode(e.getChannel(), "-q " + u.getNick());
+                e.getChannel().send().setMode( "-q " + u.getNick());
             } else {
                 e.getBot().sendIRC().notice(e.getUser().toString(), "Usage: unquiet <username>");
             }
@@ -823,7 +827,7 @@ public class Commands {
             if (args.length <= 2) {
                 User u = e.getBot().getUser(args[1]);
                 if (e.getChannel().isOp(u) || Utils.isAdmin(e.getUser().getNick()) || e.getChannel().hasVoice(e.getUser())) {
-                    e.getBot().kick(e.getChannel(), u, "Get the fuck out of here " + u.getNick());
+                     e.getChannel().send().kick(u, "Get the fuck out of here " + u.getNick());
                 }
             }
             if (args.length >= 3) {
@@ -835,7 +839,7 @@ public class Commands {
                         sb.append(arguments[i]).append(" ");
                     }
                     String allArgs = sb.toString().trim();
-                    e.getBot().kick(e.getChannel(), u, allArgs);
+                    e.getChannel().send().kick(u, allArgs);
                 }
         }
     }
@@ -984,11 +988,11 @@ public class Commands {
         String[] args = e.getMessage().split(" ");
         if (args.length == 1) {
             String chan = e.getChannel().getName();
-            e.getBot().partChannel(e.getChannel());
+            e.getChannel().send().part();
             e.getBot().sendIRC().joinChannel(chan);
         } else {
             String chan = args[1];
-            if (!e.getBot().getChannelsNames().contains(chan)) {
+            if (!e.getBot().getUserBot().getChannels().contains(chan)) {
                 e.getBot().sendIRC().notice(e.getUser().toString(), "I'm not in that channel!");
             }
             e.getBot().partChannel(e.getBot().getChannel(chan));
@@ -1006,7 +1010,7 @@ public class Commands {
             for (int i = 1; i < args.length; i++) {
                 sb.append(args[i] + " ");
             }
-            e.getBot().sendIRC().sendRawLineNow(sb.toString().trim());
+            e.getBot().sendRaw().rawLineNow(sb.toString().trim());
         }
     }
 
