@@ -995,7 +995,7 @@ public class Commands {
             if (!e.getBot().getUserBot().getChannels().contains(chan)) {
                 e.getBot().sendIRC().notice(e.getUser().toString(), "I'm not in that channel!");
             }
-            e.getBot().partChannel(e.getBot().getChannel(chan));
+            e.getChannel().send().part();
             e.getBot().sendIRC().joinChannel(chan);
         }
     } else {
@@ -1552,7 +1552,7 @@ public class Commands {
     
     public static void allsay(MessageEvent e) {
     String t = e.getChannel().getName();
-    Set<Channel> chan = e.getBot().getChannels();
+    Set<Channel> chan = e.getUser().getChannels();
     System.out.println(chan);
     System.out.println(t);
     }
